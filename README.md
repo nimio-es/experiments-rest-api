@@ -19,7 +19,7 @@ What I have to do:
 ## API URIs
 
  
-| URI | VERB | Purpose |
+| URN | VERB | Purpose |
 | --- | --- | --- |
 | /customers  | GET | List all customers (if use query param "sorted", the result will be in order) |
 | /customers/:id | GET | Gets data for the customer with :id |
@@ -38,9 +38,44 @@ What I have to do:
 | /customers/:id/purchases/:idpurchase | DELETE | Removes a purchase from the list of purchases of a customer |
 
 
+## Downloading, compiling and executing 
+
+Prepare, if you haven't, the environment installing Java 8 and Maven.
+
+Download the code to a local folder with git, and go to the folder:
+
+```bash
+git clone https://github.com/saulo-alvarado/theam.io-api-rest-stage-2.git
+cd theam.io-api-rest-stage-2
+```
+
+Build: 
+
+```bash
+mvn clean
+mvn package
+```
+
+Run the API using (Linux/Windows/Mac)
+
+```bash
+java -jar ./rest-api/target/rest-api-customers.jar
+```
+
+Linux users should use shell script existing in root project folder:
+
+```bash
+./run.sh
+```
+
+Now you can interact with it (some user preexist because they are hardcoded).
+
+To end the session you can break the execution with `CTRL+C` or you can send a request to shutdown using the namesake URN REST API resource (see below). 
+
+
 ## Simple use
 
-For the case, I prefer [HTTPie](https://httpie.org/) instead CURL. Those are examples of use the API with HTTPie. 
+Generally I prefer [HTTPie](https://httpie.org/) instead CURL. These are examples of use the API with HTTPie. 
 
 * List of customers (**http://localhost:4567/customers**):
 
@@ -70,4 +105,10 @@ For the case, I prefer [HTTPie](https://httpie.org/) instead CURL. Those are exa
 
     ```bash
     http DELETE http://localhost:4567/customers/1
+    ```
+
+* To end the session:
+
+    ```bash
+    http [GET] http://localhost:4567/shutdown
     ```
