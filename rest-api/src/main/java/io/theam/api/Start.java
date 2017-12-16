@@ -14,6 +14,8 @@ public final class Start {
 
     public static void main(String[] args) {
 
+        port(80);
+
         before("customers", OAuthCheckerFilter.oauthCheckerFilter);           // checks oauth authorization
         before("customers/*", OAuthCheckerFilter.oauthCheckerFilter);
 

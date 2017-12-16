@@ -71,7 +71,7 @@ class InsertAndListOfCustomersTest {
 
 private fun request(method: String, path: String, body: String = ""): TestResponse {
     return try {
-        val url = URL("http://localhost:4567" + path)
+        val url = URL("http://localhost" + path)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = method
         connection.setRequestProperty("Accept", "application/json");
