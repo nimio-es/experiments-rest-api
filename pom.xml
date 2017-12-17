@@ -22,6 +22,7 @@
         <!-- RISKY: SPARK-PAC4J depends on version 2.1.0. Use another one may cause problems! -->
         <version.pac4j>2.2.1</version.pac4j>
         <version.lombok>1.16.18</version.lombok>
+        <version.kotlin-argparser>2.0.3</version.kotlin-argparser>
 
         <!-- testing -->
         <version.junit>4.12</version.junit>
@@ -39,6 +40,10 @@
         <!-- java version -->
         <java.version>1.8</java.version>
     </properties>
+
+    <modules>
+        <module>rest-api</module>
+    </modules>
 
     <!-- forced dependencies to maintain a well-know environment -->
     <dependencyManagement>
@@ -102,6 +107,12 @@
                 <groupId>org.pac4j</groupId>
                 <artifactId>pac4j-http</artifactId>
                 <version>${version.pac4j}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.xenomachina</groupId>
+                <artifactId>kotlin-argparser</artifactId>
+                <version>${version.kotlin-argparser}</version>
             </dependency>
 
             <!-- kotlin -->
@@ -213,12 +224,19 @@
                     </execution>
                 </executions>
             </plugin>
-    </plugins>
+        </plugins>
 
     </build>
 
-    <modules>
-        <module>rest-api</module>
-    </modules>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
 
 </project>

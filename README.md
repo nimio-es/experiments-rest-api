@@ -18,7 +18,7 @@ What I have to do:
 
 ## The Plan
 
-Some ideas of how to be the process of build the solution.
+Some ideas of how to be the process to build the solution.
 
 | Milestone | Explanation | Status |
 | --- | --- | :---: |

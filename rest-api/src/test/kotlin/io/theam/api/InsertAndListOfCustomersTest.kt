@@ -20,14 +20,23 @@ import java.io.InputStreamReader
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+import io.theam.main
+import java.net.ServerSocket
+
 class InsertAndListOfCustomersTest {
 
     companion object {
 
         @JvmStatic
+        var urlBase: String = ""
+
+        @JvmStatic
         @BeforeClass
         fun beforeClass() {
-            Start.main(null)
+            val freePort = findFreePort()
+            main(arrayOf("--port", freePort.toString()))
+            urlBase = "http://localhost:$freePort"
+
             Spark.awaitInitialization()
         }
 
@@ -36,18 +45,21 @@ class InsertAndListOfCustomersTest {
         fun afterClass() {
             Spark.stop()
         }
+
+        @JvmStatic
+        private fun findFreePort() : Int = ServerSocket(0).use { socket -> return socket.localPort }
     }
 
     @Test
     fun exceptionWhenAccessWithoutToken() {
-        val request = HttpGet("http://localhost:8080/customers")
+        val request = HttpGet(urlBase + "/customers")
         val response = createTestResponse(executeRequest(request))
         Assert.assertEquals(401, response.status)
     }
 
     @Test
     fun forbiddenWhenAccessWithNobodyToken() {
-        val response = getRequest("http://localhost:8080/customers", getNobodyToken())
+        val response = getRequest(urlBase + "/customers", getNobodyToken())
         Assert.assertEquals(404, response.status)
     }
 
@@ -93,7 +105,7 @@ private fun getToken() =
         Gson().fromJson<TokenMessage>(
                 getBody(
                         executeRequest(
-                                HttpGet("http://localhost:8080/admintoken")
+                                HttpGet(InsertAndListOfCustomersTest.urlBase + "/admintoken")
                         ).entity.content),
                 TokenMessage::class.java).token
 
@@ -101,21 +113,21 @@ private fun getNobodyToken() =
         Gson().fromJson<TokenMessage>(
                 getBody(
                         executeRequest(
-                                HttpGet("http://localhost:8080/nobodytoken")
+                                HttpGet(InsertAndListOfCustomersTest.urlBase + "/nobodytoken")
                         ).entity.content),
                 TokenMessage::class.java).token
 
 private fun getRequest(path: String) = getRequest(path, getToken())
 
 private fun getRequest(path: String, token: String): TestResponse {
-    val request = HttpGet("http://localhost:8080" + path)
+    val request = HttpGet(InsertAndListOfCustomersTest.urlBase + path)
     request.setHeader("Authorization", "Bearer " + token)
     return createTestResponse(executeRequest(request))
 }
 
 private fun postRequest(path: String, body: String = ""): TestResponse {
 
-    val request = HttpPost("http://localhost:8080" + path)
+    val request = HttpPost(InsertAndListOfCustomersTest.urlBase + path)
     request.setHeader("Authorization", "Bearer " + getToken())
     if (!body.isEmpty()) {
         val input = StringEntity(body)
@@ -126,7 +138,7 @@ private fun postRequest(path: String, body: String = ""): TestResponse {
 }
 
 private fun deleteRequest(path: String): TestResponse {
-    val request = HttpDelete("http://localhost:8080" + path)
+    val request = HttpDelete(InsertAndListOfCustomersTest.urlBase + path)
     request.setHeader("Authorization", "Bearer " + getToken())
     return createTestResponse(executeRequest(request))
 }

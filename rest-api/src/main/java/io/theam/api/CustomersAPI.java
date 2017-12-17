@@ -9,7 +9,7 @@ import spark.Route;
 
 import static spark.Spark.halt;
 
-final class CustomersAPI {
+public final class CustomersAPI {
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomersAPI.class);
 
@@ -18,7 +18,7 @@ final class CustomersAPI {
     /**
      * Returns all customers
      */
-    static final Route listCustomers = (q, a) -> {
+    public static final Route listCustomers = (q, a) -> {
         LOG.info("List of all customers with query params: {}", q.queryParams());
         return CUSTOMERS_SERVICE.allCustomers(q.queryParams().contains("sorted"));
     };
@@ -26,7 +26,7 @@ final class CustomersAPI {
     /**
      * Looks for a customer with a concrete Id
      */
-    static final Route getCustomer = (q, a) -> {
+    public static final Route getCustomer = (q, a) -> {
         final String id = q.params("id");
         LOG.info("Get customer by id: {}", id);
         try {
@@ -41,7 +41,7 @@ final class CustomersAPI {
      * Creates a new customer. But for this it's necessary to use a partial representation
      * without all the additional data.
      */
-    static final Route addCustomer = (q, a) -> {
+    public static final Route addCustomer = (q, a) -> {
         LOG.info("Creates a new customer with info: {}", q.body());
         final CustomersService.PartialCreationCustomerData partialCustomer =
                 new Gson().fromJson(q.body(), CustomersService.PartialCreationCustomerData.class);
@@ -55,7 +55,7 @@ final class CustomersAPI {
     /**
      * Modify a customer.
      */
-    static final Route editCustomer = (q, a) -> {
+    public static final Route editCustomer = (q, a) -> {
         LOG.info("Modify existing customer with: {}", q.body());
         try {
             final Customer editCustomer = Customer.fromJson(q.body());
@@ -70,7 +70,7 @@ final class CustomersAPI {
     /**
      * Removes a customer
      */
-    static final Route deleteCustomer = (q, a) -> {
+    public static final Route deleteCustomer = (q, a) -> {
         final String id = q.params("id");
         LOG.info("Delete the user with id: '{}'", id);
         try {
@@ -83,7 +83,7 @@ final class CustomersAPI {
     /**
      * Checks the existence of a customer id
      */
-    static final Route existCustomer = (q, a) -> {
+    public static final Route existCustomer = (q, a) -> {
         final String id = q.params("id");
         LOG.info("Checks the existence of a customer with id: '{}'", id);
 

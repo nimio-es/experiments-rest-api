@@ -16,6 +16,12 @@
     <packaging>jar</packaging>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.xenomachina</groupId>
+            <artifactId>kotlin-argparser</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
@@ -24,11 +30,6 @@
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>spark-pac4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-oauth</artifactId>
         </dependency>
 
         <dependency>
@@ -61,7 +62,9 @@
             <artifactId>kotlin-stdlib</artifactId>
         </dependency>
 
-        <!-- testing -->
+        <!-- ************************ -->
+        <!-- .       testing        . -->
+        <!-- ************************ -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
@@ -179,7 +182,7 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <mainClass>io.theam.api.Start</mainClass>
+                            <mainClass>io.theam.EntryPointKt</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
