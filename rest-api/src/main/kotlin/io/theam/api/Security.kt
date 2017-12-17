@@ -36,18 +36,35 @@ class TheamConfigFactory: ConfigFactory {
 
 }
 
+data class TokenMessage(val token: String)
+
 // util to generate a token to test
-fun calculateToken() : Route = Route { _,_ ->
+fun calculateAdminToken() : Route = Route { _, _ ->
     val generator = JwtGenerator<CommonProfile>(signatureConfiguration)
     val profile = CommonProfile()
     profile.addAttributes(
             mapOf(
                     "email" to "pepe.potamo@canaria.zoo",
                     "first_name" to "Pepe",
-                    "family_name" to "James",
-                    "display_name" to "Pepe J.",
-                    "username" to "pepejames")
+                    "family_name" to "Potamo",
+                    "display_name" to "Pepe P.",
+                    "username" to "pepepotamo")
     )
     profile.addRole("ROLE_ADMIN")
-    hashMapOf( "token" to generator.generate(profile))
+    TokenMessage(generator.generate(profile))
+}
+
+// util to generate a token for a person that cann't access API because hasn't ROLE_ADMIN
+fun calculateNobodyToke() : Route = Route { _, _ ->
+    val generator = JwtGenerator<CommonProfile>(signatureConfiguration)
+    val profile = CommonProfile()
+    profile.addAttributes(
+            mapOf(
+                    "email" to "ana.conda@canaria.zoo",
+                    "first_name" to "Ana",
+                    "family_name" to "Conda",
+                    "display_name" to "Ana C.",
+                    "username" to "anaconda")
+    )
+    TokenMessage(generator.generate(profile))
 }

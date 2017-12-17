@@ -2,41 +2,60 @@ package io.theam.api
 
 import com.google.gson.Gson
 import io.theam.model.Customer
+import org.apache.http.HttpResponse
+import org.apache.http.client.methods.HttpDelete
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.methods.HttpUriRequest
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClientBuilder
 import org.junit.AfterClass
+import org.junit.Assert
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import spark.Spark
-import spark.utils.IOUtils
-import java.io.IOException
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-@Ignore
 class InsertAndListOfCustomersTest {
 
     companion object {
 
-        @JvmStatic @BeforeClass
+        @JvmStatic
+        @BeforeClass
         fun beforeClass() {
             Start.main(null)
             Spark.awaitInitialization()
         }
 
-        @JvmStatic @AfterClass
+        @JvmStatic
+        @AfterClass
         fun afterClass() {
             Spark.stop()
         }
     }
 
     @Test
+    fun exceptionWhenAccessWithoutToken() {
+        val request = HttpGet("http://localhost:8080/customers")
+        val response = createTestResponse(executeRequest(request))
+        Assert.assertEquals(401, response.status)
+    }
+
+    @Test
+    fun forbiddenWhenAccessWithNobodyToken() {
+        val response = getRequest("http://localhost:8080/customers", getNobodyToken())
+        Assert.assertEquals(404, response.status)
+    }
+
+    @Test
     fun createUserAndGet() {
 
         // insert and check response
-        val res = request("POST", "/customers", "{ \"firstName\": \"Lukas\", \"lastName\": \"Grijanderl\", \"nid\": \"666666P\" }")
+        val res = postRequest("/customers", "{ \"firstName\": \"Lukas\", \"lastName\": \"Grijanderl\", \"nid\": \"666666P\" }")
         assertEquals(200, res.status)
 
         val customer = Gson().fromJson<Customer>(res.body, Customer::class.java)
@@ -44,7 +63,7 @@ class InsertAndListOfCustomersTest {
 
         // now gets directly
         val customerGet = Gson().fromJson<Customer>(
-                request("GET", "/customers/" + customer.id).body,   // using the stored id
+                getRequest("/customers/" + customer.id).body,   // using the stored id
                 Customer::class.java)
         assertNotNull(customerGet)
         assertEquals(customer, customerGet)
@@ -54,47 +73,70 @@ class InsertAndListOfCustomersTest {
     fun createUserAndDelete() {
 
         // insert and check response
-        val res = request("POST", "/customers", "{ \"firstName\": \"Lukas\", \"lastName\": \"Grijanderl\", \"nid\": \"666666P\" }")
+        val res = postRequest("/customers", "{ \"firstName\": \"Lukas\", \"lastName\": \"Grijanderl\", \"nid\": \"666666P\" }")
         assertEquals(200, res.status)
 
         val customer = Gson().fromJson<Customer>(res.body, Customer::class.java)
         assertNotNull(customer)
 
         // and now delete it
-        val resDelete = request("DELETE", "/customers/" + customer.id)
+        val resDelete = deleteRequest("/customers/" + customer.id)
         assertEquals(200, resDelete.status)
 
         // and try to load (and using java classes fails)
-        val resGet = request("GET", "/customers/" + customer.id)
+        val resGet = getRequest("/customers/" + customer.id)
         assertEquals(400, resGet.status)
     }
 }
 
-private fun request(method: String, path: String, body: String = ""): TestResponse {
-    return try {
-        val url = URL("http://localhost" + path)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = method
-        connection.setRequestProperty("Accept", "application/json")
-        connection.doOutput = true
+private fun getToken() =
+        Gson().fromJson<TokenMessage>(
+                getBody(
+                        executeRequest(
+                                HttpGet("http://localhost:8080/admintoken")
+                        ).entity.content),
+                TokenMessage::class.java).token
 
-        // writes the body
-        if(!body.isEmpty()) {
-            connection.doInput = true
-            connection.setRequestProperty("Content-Type", "application/json")
-            val wr = OutputStreamWriter(connection.outputStream)
-            wr.write(body)
-            wr.flush()
-        } else {}
+private fun getNobodyToken() =
+        Gson().fromJson<TokenMessage>(
+                getBody(
+                        executeRequest(
+                                HttpGet("http://localhost:8080/nobodytoken")
+                        ).entity.content),
+                TokenMessage::class.java).token
 
-        connection.connect()
-        TestResponse(
-                connection.responseCode,
-                IOUtils.toString(connection.inputStream))
-    } catch (e: IOException) {
-        // because HttpURLConnection throws an exception if the response status code is different of 200!!!
-        TestResponse(400, "")
-    }
+private fun getRequest(path: String) = getRequest(path, getToken())
+
+private fun getRequest(path: String, token: String): TestResponse {
+    val request = HttpGet("http://localhost:8080" + path)
+    request.setHeader("Authorization", "Bearer " + token)
+    return createTestResponse(executeRequest(request))
 }
+
+private fun postRequest(path: String, body: String = ""): TestResponse {
+
+    val request = HttpPost("http://localhost:8080" + path)
+    request.setHeader("Authorization", "Bearer " + getToken())
+    if (!body.isEmpty()) {
+        val input = StringEntity(body)
+        input.setContentType("application/json")
+        request.entity = input
+    }
+    return createTestResponse(executeRequest(request))
+}
+
+private fun deleteRequest(path: String): TestResponse {
+    val request = HttpDelete("http://localhost:8080" + path)
+    request.setHeader("Authorization", "Bearer " + getToken())
+    return createTestResponse(executeRequest(request))
+}
+
+private fun executeRequest(request: HttpUriRequest): HttpResponse = HttpClientBuilder.create().build().execute(request)
+
+private fun createTestResponse(httpResponse: HttpResponse): TestResponse = TestResponse(
+        httpResponse.statusLine.statusCode,
+        getBody(httpResponse.entity.content))
+
+private fun getBody(inputStream: InputStream): String = BufferedReader(InputStreamReader(inputStream)).readText()
 
 private data class TestResponse(val status: Int, val body: String)

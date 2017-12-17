@@ -2,8 +2,6 @@ package io.theam.api;
 
 import com.google.gson.Gson;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.jwt.profile.JwtGenerator;
 import org.pac4j.sparkjava.SecurityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +62,8 @@ public final class Start {
 
 
         // -- util token generator
-        get("token", SecurityKt.calculateToken(), GSON::toJson);
+        get("admintoken", SecurityKt.calculateAdminToken(), GSON::toJson);
+        get("nobodytoken", SecurityKt.calculateNobodyToke(), GSON::toJson);
 
         after((q, a) -> a.type("application/json"));  // all is json in this API
         after(
