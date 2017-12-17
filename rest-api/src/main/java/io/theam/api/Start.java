@@ -1,6 +1,10 @@
 package io.theam.api;
 
 import com.google.gson.Gson;
+import org.pac4j.core.config.Config;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.jwt.profile.JwtGenerator;
+import org.pac4j.sparkjava.SecurityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +18,14 @@ public final class Start {
 
     public static void main(String[] args) {
 
-        port(80);
+        final Config config = new TheamConfigFactory().build();
+        final SecurityFilter secFilter = new SecurityFilter(config, "HeaderClient", "admin");
 
-        before("customers", OAuthCheckerFilter.oauthCheckerFilter);           // checks oauth authorization
-        before("customers/*", OAuthCheckerFilter.oauthCheckerFilter);
+        port(8080);
+
+        // security filter
+        before("customers", secFilter);
+        before("customers/*", secFilter);
 
         // customers API
         path("customers", () -> {
@@ -53,6 +61,10 @@ public final class Start {
 
         // -- shutdown
         get("shutdown", ShutdownAPI.shutdownServer);
+
+
+        // -- util token generator
+        get("token", SecurityKt.calculateToken(), GSON::toJson);
 
         after((q, a) -> a.type("application/json"));  // all is json in this API
         after(

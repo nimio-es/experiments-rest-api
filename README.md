@@ -75,40 +75,52 @@ To end the session you can break the execution with `CTRL+C` or you can send a r
 
 ## Simple use
 
-Generally I prefer [HTTPie](https://httpie.org/) instead CURL. These are examples of use the API with HTTPie. 
+Generally I prefer [HTTPie](https://httpie.org/) instead CURL. It's recommendable to install [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin. In current version I use the JWT token simulation to protect the API.   
 
-* List of customers (**http://localhost:4567/customers**):
+### Before call
+
+Get the simulated token using `http http://localhost:8080/token`. Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` with previous value:
+
+```bash
+export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
+```
+
+### Examples
+
+These are examples of use the API with HTTPie. Use in all of these the parameter `--auth-type=jwt -v` 
+
+* List of customers (**http://localhost:8080/customers**):
 
     ```bash
-    http [GET] http://localhost:4567/customers
+    http --auth-type=jwt -v [GET] http://localhost:8080/customers
     ```
 
-* Get data for first customer (id 1) (**http://localhost:4567/customers/1**):
+* Get data for first customer (id 1) (**http://localhost:80807/customers/1**):
 
     ```bash
-    http [GET] http://localhost:4567/customers/1
+    http --auth-type=jwt -v [GET] http://localhost:8080/customers/1
     ```
     
-* Create a new customer (**http://localhost:4567/customers** with **POST verb**):
+* Create a new customer (**http://localhost:8080/customers** with **POST verb**):
     
     ```bash
-    http POST http://localhost:4567/customers firstName=Saulo lastName=Alvarado nid=99999999X
+    http --auth-type=jwt -v POST http://localhost:8080/customers firstName=Saulo lastName=Alvarado nid=99999999X
     ```
     
-* Change/Edit data of a customer (**http://localhost:4567/customers** with **PUT verb**):
+* Change/Edit data of a customer (**http://localhost:8080/customers** with **PUT verb**):
 
      ```bash
-     http PUT http://localhost:4567/customers id=1 firstName=Saulo lastName="Alvarado Mateos" nid=99999999X
+     http --auth-type=jwt -v PUT http://localhost:8080/customers id=1 firstName=Saulo lastName="Alvarado Mateos" nid=99999999X
      ```
 
-* Delete first customer (**http://localhost:4567/customers/1** with **DELETE verb**):
+* Delete first customer (**http://localhost:8080/customers/1** with **DELETE verb**):
 
     ```bash
-    http DELETE http://localhost:4567/customers/1
+    http --auth-type=jwt -v DELETE http://localhost:8080/customers/1
     ```
 
 * To end the session:
 
     ```bash
-    http [GET] http://localhost:4567/shutdown
+    http [GET] http://localhost:8080/shutdown
     ```

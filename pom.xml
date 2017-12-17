@@ -19,7 +19,8 @@
         <version.gson>2.8.2</version.gson>
         <version.spark.framework>2.7.1</version.spark.framework>
         <version.spark-pac4j>2.1.0</version.spark-pac4j>
-        <version.pac4j>2.2.1</version.pac4j>  <!-- RISKY: SPARK-PAC4J depends on a previous version and thus may cause problems! -->
+        <!-- RISKY: SPARK-PAC4J depends on version 2.1.0. Use another one may cause problems! -->
+        <version.pac4j>2.2.1</version.pac4j>
         <version.lombok>1.16.18</version.lombok>
 
         <!-- testing -->
@@ -91,6 +92,18 @@
                 <version>${version.pac4j}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.pac4j</groupId>
+                <artifactId>pac4j-jwt</artifactId>
+                <version>${version.pac4j}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.pac4j</groupId>
+                <artifactId>pac4j-http</artifactId>
+                <version>${version.pac4j}</version>
+            </dependency>
+
             <!-- kotlin -->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -138,7 +151,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- all modules will use junit, i expect -->
+        <!-- I expect all modules require junit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import io.theam.model.Customer
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import spark.Spark
 import spark.utils.IOUtils
@@ -14,7 +15,7 @@ import java.net.URL
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-
+@Ignore
 class InsertAndListOfCustomersTest {
 
     companion object {
@@ -74,11 +75,11 @@ private fun request(method: String, path: String, body: String = ""): TestRespon
         val url = URL("http://localhost" + path)
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = method
-        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Accept", "application/json")
         connection.doOutput = true
 
         // writes the body
-        if(!body.isNullOrEmpty()) {
+        if(!body.isEmpty()) {
             connection.doInput = true
             connection.setRequestProperty("Content-Type", "application/json")
             val wr = OutputStreamWriter(connection.outputStream)
@@ -87,8 +88,9 @@ private fun request(method: String, path: String, body: String = ""): TestRespon
         } else {}
 
         connection.connect()
-        val body = IOUtils.toString(connection.inputStream)
-        TestResponse(connection.responseCode, body)
+        TestResponse(
+                connection.responseCode,
+                IOUtils.toString(connection.inputStream))
     } catch (e: IOException) {
         // because HttpURLConnection throws an exception if the response status code is different of 200!!!
         TestResponse(400, "")

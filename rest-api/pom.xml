@@ -12,7 +12,6 @@
         <relativePath>./..</relativePath>
     </parent>
 
-	<groupId>io.theam</groupId>
 	<artifactId>rest-api-customers</artifactId>
     <packaging>jar</packaging>
 
@@ -33,6 +32,16 @@
         </dependency>
 
         <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-http</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -47,14 +56,12 @@
             <artifactId>logback-core</artifactId>
         </dependency>
 
-        <!-- testing -->
-        <!-- NOTE: this time kotling only plays in the test phase. Then, the stdlin use scope test -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <scope>test</scope>
         </dependency>
 
+        <!-- testing -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
@@ -91,6 +98,7 @@
                         <configuration>
                             <sourceDirs>
                                 <source>${project.basedir}/src/main/java</source>
+                                <source>${project.basedir}/src/main/kotlin</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
