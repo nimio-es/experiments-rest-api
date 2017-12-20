@@ -16,7 +16,13 @@ What I have to do:
 - Optionally, one or more cucumber tests to check one or more end-points
 
 
-## The Plan
+## The Fast Lane
+
+Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Here my contribution to increase the Entropy of Universe.
+
+I hope to find time (and feel like) to continue with the master branch and keep trying things.
+
+## The **OLD** Plan Was... (_Unreal in this Reality_)
 
 Some ideas of how to be the process to build the solution.
 
