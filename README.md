@@ -5,13 +5,13 @@
 What I have to do:
 
 - Rest API for Customers. Each customer have to be defined with 
-    -- First name
-    -- Last name
-    -- National Document of Identity
-    -- Image (optional)
-    -- With each customer also store last purchases information
+    - First name
+    - Last name
+    - National Document of Identity
+    - Image (optional)
+    - With each customer also store last purchases information
 
-- Only admin roles can access the API. Use OAuth2 to check
+- Only admin roles can access the API. Restrict access using OAuth 2.
 
 - Optionally, one or more cucumber tests to check one or more end-points
 
@@ -21,6 +21,25 @@ What I have to do:
 Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Google `spring+boot+oauth2` and you'll get a lot of examples. Here my contribution to increase the Entropy of Universe. Basically the important part of the code was ~~ripped~~ adapted from [Example Spring Boot REST API](https://github.com/gigsterous/gigy-example).
 
 I really hope to find time (and feel like) to continue with the master branch and keep trying things.
+
+
+## Current version: What it does and what it does not do
+
+This version does:
+
+- CRUD for customers
+- Customers include purchase information (one to many relation)
+- There is an oauth url (auto-generated from Spring Boot) to get a token using password Grant Type and client-id + client-secret
+- Unit tests and a pair of cucumber scenarios 
+
+This version does not (yet):
+
+- Manage purchases 
+- Poor version of purchase (It's necessary refer articles, for example?)
+- Check role admin
+- Work with binary data (customer image)
+
+Of those, the last two would be the real challenges. For the rest of those would be more of the same.
 
 
 ## Downloading, compiling and executing 
@@ -41,21 +60,15 @@ mvn clean
 mvn package
 ```
 
-Run the API using (Linux/Windows/Mac)
+Run the API using:
 
 ```bash
-java -jar ./rest-api/target/rest-api-customers.jar
+mvn spring-boot:run
 ```
 
-Linux users should use shell script existing in root project folder:
+Now you can interact with it (some user preexist because the database is populated at startup).
 
-```bash
-./run.sh
-```
-
-Now you can interact with it (some user preexist because they are hardcoded).
-
-To end the session you can break the execution with `CTRL+C` or you can send a request to shutdown using the namesake URN REST API resource (see below). 
+To end the session you can break the execution with `CTRL+C`. 
 
 
 ## Simple use
@@ -102,7 +115,7 @@ export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
 
 ### User without admin role
 
-There is one user without Admin Role. Use the previous call to get the token, but in `username` use `noadmin` and try to call anything. You'll get the response you deserve!
+In this version there're not roles yet.
 
 ### Examples
 
@@ -136,10 +149,4 @@ These are examples of use the API with HTTPie. Use in all of these the parameter
 
     ```bash
     http --auth-type=jwt -v DELETE http://localhost:8080/customers/1
-    ```
-
-* To end the session:
-
-    ```bash
-    http [GET] http://localhost:8080/shutdown
     ```
