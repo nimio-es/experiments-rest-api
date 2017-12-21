@@ -22,68 +22,52 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(CustomerController.class)
+@WebMvcTest(value = CustomerController.class, secure = false)
 public class CustomerControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
+	@Autowired
+	private MockMvc mvc;
 
-    @MockBean
-    private CustomerRepository customerRepo;
+	@MockBean
+	private CustomerRepository customerRepo;
+	
+	private Customer customer;
+	
+	@Before
+	public void prepare() {
+		customer = new Customer();
+		customer.setId(1l);
+		customer.setFirstName("Saulo");
+		customer.setLastName("Alvarado Mateos");
+		customer.setNdi("0000000X");
+	}
 
-    private List<Customer> customers;
-
-
-    @Before
-    public void setUp() {
-
-        customers = new ArrayList<>();
-
-        final Customer customer1 = new Customer();
-        customer1.setId(1L);
-        customer1.setFirstName("Saulo");
-        customer1.setFamilyName("Alvarado");
-        customer1.setNdi("00000000Y");
-
-        final Customer customer2 = new Customer();
-        customer2.setId(2L);
-        customer2.setFirstName("Nieves");
-        customer2.setFamilyName("Sánchez");
-        customer2.setNdi("11111111X");
-
-        customers.add(customer1);
-        customers.add(customer2);
-    }
-
-
-    @Test
-    public void customerNotFoundTest() throws Exception {
-        mvc.perform(get("/customers/2").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void getCustomerTest() throws Exception {
-
-        given(customerRepo.findOne(1L)).willReturn(customers.get(0));
-        mvc.perform(get("/customers/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Saulo")))
-                .andExpect(jsonPath("$.familyName", is("Alvarado")));
-    }
-
-    @Test
-    public void getCustomersTest() throws Exception {
-
-        given(customerRepo.findAll()).willReturn(customers);
-        mvc.perform(get("/customers")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].firstName", is("Saulo")))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].familyName", is("Sánchez")));
-    }
+	@Test
+	public void getPersonTest() throws Exception {
+		given(customerRepo.findOne(1l)).willReturn(customer);
+		mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.firstName", is("Saulo")))
+				.andExpect(jsonPath("$.lastName", is("Alvarado Mateos")))
+				.andExpect(jsonPath("$.ndi", is("0000000X")));
+	}
+	
+	@Test
+	public void personNotFoundTest() throws Exception {
+		mvc.perform(get("/customers/2").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void getPeopleTest() throws Exception {
+		List<Customer> customers = new ArrayList<>();
+		customers.add(customer);
+		
+		given(customerRepo.findAll()).willReturn(customers);
+		mvc.perform(get("/customers").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].id", is(1)))
+				.andExpect(jsonPath("$[0].firstName", is("Saulo")))
+				.andExpect(jsonPath("$[0].lastName", is("Alvarado Mateos")))
+				.andExpect(jsonPath("$[0].ndi", is("0000000X")));
+	}
 
 }

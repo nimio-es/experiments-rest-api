@@ -18,45 +18,9 @@ What I have to do:
 
 ## The Fast Lane
 
-Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Here my contribution to increase the Entropy of Universe.
+Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Google `spring+boot+oauth2` and you'll get a lot of examples. Here my contribution to increase the Entropy of Universe. Basically the important part of the code was ~~ripped~~ adapted from [Example Spring Boot REST API](https://github.com/gigsterous/gigy-example).
 
-I hope to find time (and feel like) to continue with the master branch and keep trying things.
-
-## The **OLD** Plan Was... (_Unreal in this Reality_)
-
-Some ideas of how to be the process to build the solution.
-
-| Milestone | Explanation | Status |
-| --- | --- | :---: |
-| Tech immersion | Start playing with [Spark Framework](http://sparkjava.com/) and with [Pac4j](http://www.pac4j.org/). Go beyond the Spring Framework. Spring provides a sort of automatic mechanisms that facilitate, and do for you, almost everything. Try new things. The result will be a lot of dirty code with most of things hardcoded and storage using memory. A basic REST API with token authentication. And [Kotlin](https://kotlinlang.org/), of course! **Why Spark?** Because it's **light**, it's **fast** and it's **cool**. :sunglasses: | In progress | 
-| Model & Code improvements | Continue learning about technological decisions, but oriented to establish a common vocabulary inside the API and outside it. Some unit tests also and some code testing coverage. | Thinking about |
-| Persistence & Functional/Integration Tests | Use any sort of storage to persist the model. May be MongoDB, may be PostgresQL, may be plain file system. Probably the use of Docker (and Compose) to start a repeatable scenario. And... **Cucumber** appears in action! (Really I'll use [the JVM implementation](https://cucumber.io/docs/reference/jvm)) | Pending... |
-| OAuth 2 | Indirect flow. A little web application to call GitHub, Facebook or whatever to authenticate a user and to generate a token to use when call. No more fake tokens, please. | Pending ... |
-| The Console Client | A console client to interact with the API. Things like `theam customers list` in console to get the list of all customers | May be... |
-| The Web Client | Extend/Continue with the web application started with OAuth2 to show and interact with the model | May be... |
-| The Phone Client | Probably not, but sounds good. However, this time no JVM solution. I'll use F# and Xamarin.Forms to build a solution able to work in any device | Probably not... |
-| The System | Nginx, API Gateway, Microservices... And all those cute things which the technicians dream of | Probably not... | 
-
-
-## API URIs
- 
-| URN | VERB | Purpose |
-| --- | --- | --- |
-| /customers  | GET | List all customers (if use query param "sorted", the result will be in order) |
-| /customers/:id | GET | Gets data for the customer with :id |
-| /customers | POST | Adds a new customer (when data is correct) |
-| /customers | PUT | Change base information of the customer |
-| /customers/:id | DELETE | Deletes the customer with the :id |
-| /customers/:id | OPTIONS | Checks if a customer exists with that :id |
-| /customers/:id/image | GET | Gets the image associated with the customer |
-| /customers/:id/image | POST | Store a new (or substitute) the image associated with the customer |
-| /customers/:id/image | PUT | Does the same of POST case |
-| /customers/:id/image | DELETE | Erases the image of the customer |
-| /customers/:id/purchases | GET | List all purchases of the customer |
-| /customers/:id/purchases/:idpurchase | GET | Gets information of the selected purchase |
-| /customers/:id/purchases | POST | Insert a new purchase in the list of purchases of a customer |
-| /customers/:id/purchases | PUT | Change information of a exist purchase in the list of a customer |
-| /customers/:id/purchases/:idpurchase | DELETE | Removes a purchase from the list of purchases of a customer |
+I really hope to find time (and feel like) to continue with the master branch and keep trying things.
 
 
 ## Downloading, compiling and executing 
@@ -98,17 +62,47 @@ To end the session you can break the execution with `CTRL+C` or you can send a r
 
 Generally I prefer [HTTPie](https://httpie.org/) instead CURL. It's recommendable to install [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin. In current version I use the JWT token simulation to protect the API.   
 
+### API URIs
+
+These are the resources offered by the API.
+ 
+| URN | VERB | Purpose |
+| --- | --- | --- |
+| /customers  | GET | List all customers (if use query param "sorted", the result will be in order) |
+| /customers/:id | GET | Gets data for the customer with :id |
+| /customers | POST | Adds a new customer (when data is correct) |
+| /customers | PUT | Change base information of the customer |
+| /customers/:id | DELETE | Deletes the customer with the :id |
+| /customers/:id | OPTIONS | Checks if a customer exists with that :id |
+| /customers/:id/image | GET | Gets the image associated with the customer |
+| /customers/:id/image | POST | Store a new (or substitute) the image associated with the customer |
+| /customers/:id/image | PUT | Does the same of POST case |
+| /customers/:id/image | DELETE | Erases the image of the customer |
+| /customers/:id/purchases | GET | List all purchases of the customer |
+| /customers/:id/purchases/:idpurchase | GET | Gets information of the selected purchase |
+| /customers/:id/purchases | POST | Insert a new purchase in the list of purchases of a customer |
+| /customers/:id/purchases | PUT | Change information of a exist purchase in the list of a customer |
+| /customers/:id/purchases/:idpurchase | DELETE | Removes a purchase from the list of purchases of a customer |
+
+
 ### Before call
 
-Get the simulated token using `http http://localhost:8080/admintoken`. Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` with previous value:
+With each call to the API you need to include an oauth token. To get one, use the next command line operation:
+
+```bash
+http -v -f -a 'client-id:client-secret' POST http://localhost:8080/theam/oauth/token 'grant_type=password' 'username=saulo.alvarado' 'password=password'
+```
+
+Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` with previous value:
+
 
 ```bash
 export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
 ```
 
-### The anti-token
+### User without admin role
 
-Yeah, you could call `/nobodytoken` to generate a token without admin role. Only if you want to see the api respond with Forbidden
+There is one user without Admin Role. Use the previous call to get the token, but in `username` use `noadmin` and try to call anything. You'll get the response you deserve!
 
 ### Examples
 

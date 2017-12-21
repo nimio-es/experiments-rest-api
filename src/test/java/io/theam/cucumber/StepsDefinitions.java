@@ -5,12 +5,19 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.theam.App;
 import io.theam.model.Customer;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,28 +29,60 @@ public class StepsDefinitions {
 
     private static final String CUSTOMER_BASE_PATH = "/customers";
 
+    /* ******************************************************************************************
+     *  DISCLAIMER: I know, this isn't the best way to write BDD tests. But the time is money...
+     * *************************************************************************************** ** */
+
     // TODO: Review this, because I think isn't the best way to do this
     private static ResponseEntity<Customer> lastResponse = null;
+    private static String token;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
     // ----
 
-    @Given("^a system with one customer in the list$")
-    public void a_system_with_one_customer_in_the_list() throws Throwable {
+    private String getToken() {
+        final MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
+        request.set("username", "saulo.alvarado");
+        request.set("password", "password");
+        request.set("grant_type", "password");
+
+        Map<String, Object> response =
+                testRestTemplate.withBasicAuth("theam", "secret")
+                        .postForObject("/oauth/token", request, Map.class);
+
+        for(Map.Entry<String, Object> e: response.entrySet())
+            LoggerFactory.getLogger(StepsDefinitions.class).info("entry = {}, {}", e.getKey(), e.getValue().toString());
+
+        return response.get("access_token").toString();
+    }
+
+    @Given("^a user with a token$")
+    public void a_user_with_a_token() {
+        token = getToken();
+    }
+
+    @Given("^a system with some customers in the list$")
+    public void a_system_with_one_customer_in_the_list() {
         final Customer customer = new Customer();
-        customer.setFirstName("Saulo");
-        customer.setFamilyName("Alvarado");
+        customer.setFirstName("Paco");
+        customer.setLastName("Mer");
         customer.setNdi("0000000X");
-        final HttpEntity<Customer> request = new HttpEntity<>(customer);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        final HttpEntity<Customer> request = new HttpEntity<>(customer, headers);
         Customer saved = testRestTemplate.postForObject(CUSTOMER_BASE_PATH, request, Customer.class);
-        assertThat(saved, notNullValue());
+        assertThat(saved.getId(), notNullValue());
     }
 
     @When("^asking for customer (\\d+)$")
     public void the_client_calls_customers_X(int id) {
-        lastResponse = testRestTemplate.getForEntity(CUSTOMER_BASE_PATH + "/" + Integer.toString(id), Customer.class);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+
+        lastResponse = testRestTemplate.
+                exchange(CUSTOMER_BASE_PATH + "/" + Long.toString(id), HttpMethod.GET, new HttpEntity<>(headers), Customer.class);
     }
 
     @Then("^the system responds correctly$")
@@ -52,14 +91,15 @@ public class StepsDefinitions {
     }
 
     @Then("^the client receives correct customer number (\\d+) information$")
-    public void the_client_receives_correct_customer_number_information(int arg1) throws Throwable {
+    public void the_client_receives_correct_customer_number_information(int arg1) {
+        // this one preexists
         assertThat(lastResponse.getBody().getFirstName(), is("Saulo"));
-        assertThat(lastResponse.getBody().getFamilyName(), is("Alvarado"));
-        assertThat(lastResponse.getBody().getNdi(), is("0000000X"));
+        assertThat(lastResponse.getBody().getLastName(), is("Alvarado Mateos"));
+        assertThat(lastResponse.getBody().getNdi(), is("000000000X"));
     }
 
     @Then("^the system responds that customer was not found$")
-    public void the_system_responds_that_customer_was_not_find() throws Throwable {
+    public void the_system_responds_that_customer_was_not_find() {
         assertThat(lastResponse.getStatusCode().value(), is(404));
     }
 
