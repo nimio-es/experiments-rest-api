@@ -4,6 +4,7 @@ CREATE TABLE users (
     username VARCHAR(128) UNIQUE,
     password VARCHAR(256),
     enabled BOOL,
+    roles VARCHAR(200)
 );
 
 DROP TABLE IF EXISTS customers;

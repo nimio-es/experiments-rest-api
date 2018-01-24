@@ -44,7 +44,7 @@ public class StepsDefinitions {
 
     private String getToken() {
         final MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
-        request.set("username", "saulo.alvarado");
+        request.set("username", "noelia.capaz");
         request.set("password", "password");
         request.set("grant_type", "password");
 

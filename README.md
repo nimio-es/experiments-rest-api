@@ -18,9 +18,19 @@ What I have to do:
 
 ## The Fast Lane
 
-Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Google `spring+boot+oauth2` and you'll get a lot of examples. Here my contribution to increase the Entropy of Universe. Basically the important part of the code was ~~ripped~~ adapted from [Example Spring Boot REST API](https://github.com/gigsterous/gigy-example).
+Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Google `spring+boot+oauth2` and you'll get a lot of examples. Here my contribution to increase the Entropy of Universe. 
 
 I really hope to find time (and feel like) to continue with the master branch and keep trying things.
+
+
+### Inspiring resources
+
+- The first approach was ~~gutting~~ adapting [Example Spring Boot REST API](https://github.com/gigsterous/gigy-example).
+- [Spring Boot Security OAuth2 Example(Bcrypt Encoder)](http://www.devglan.com/spring-security/spring-boot-security-oauth2-example)
+- [7 Steps to implement OAuth 2 in Spring Boot with Spring Security](https://jugbd.org/2017/09/19/implementing-oauth2-spring-boot-spring-security/)
+- [Minimal implementation of Authorization Server, Resource Server and OAuth2 Client in Spring Boot with Spring Security and JWT](https://github.com/dynamind/spring-boot-security-oauth2-minimal)
+- [Tutorial: Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
+- [Secure Spring REST API using OAuth2](http://websystique.com/spring-security/secure-spring-rest-api-using-oauth2/)
 
 
 ## Current version: What it does and what it does not do
@@ -31,15 +41,15 @@ This version does:
 - Customers include purchase information (one to many relation)
 - There is an oauth url (auto-generated from Spring Boot) to get a token using password Grant Type and client-id + client-secret
 - Unit tests and a pair of cucumber scenarios 
+- Check role admin
 
 This version does not (yet):
 
 - Manage purchases 
 - Poor version of purchase (It's necessary refer articles, for example?)
-- Check role admin
 - Work with binary data (customer image)
 
-Of those, the last two would be the real challenges. For the rest of those would be more of the same.
+Of those, the last one would be the real challenges. For the rest of those would be more of the same.
 
 
 ## Downloading, compiling and executing 
@@ -103,7 +113,7 @@ These are the resources offered by the API.
 With each call to the API you need to include an oauth token. To get one, use the next command line operation:
 
 ```bash
-http -v -f -a 'client-id:client-secret' POST http://localhost:8080/theam/oauth/token 'grant_type=password' 'username=saulo.alvarado' 'password=password'
+http -v -f -a 'theam:secret' POST http://localhost:8080/oauth/token 'grant_type=password' 'username=noelia.capaz' 'password=password'
 ```
 
 Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` with previous value:
@@ -113,9 +123,16 @@ Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` wit
 export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
 ```
 
-### User without admin role
+### Different roles
 
-In this version there're not roles yet.
+In this example you can use two different users with distinct roles. 
+
+- `noelia.capaz` with ADMIN role
+- `pepito.currito` without ADMIN role (only USER role)
+
+Both users has `password` as password. Isn't easy?
+
+You can use `pepito.currito`to prove that only users with administrative permissions can access the API methods.
 
 ### Examples
 

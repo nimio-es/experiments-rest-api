@@ -1,6 +1,6 @@
-INSERT INTO users (user_id, username, password, enabled) VALUES 
-	(1, 'saulo.alvarado', '$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri', true),
-	(2, 'noadmin', '$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri', true);
+INSERT INTO users (user_id, username, password, enabled, roles) VALUES
+	(1, 'noelia.capaz', '$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri', true, 'ADMIN'),
+	(2, 'pepito.currito', '$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri', true, 'USER');
 
 INSERT INTO customers (customer_id, first_name, last_name, ndi) VALUES
 	(1, 'Saulo', 'Alvarado Mateos', '000000000X'),
