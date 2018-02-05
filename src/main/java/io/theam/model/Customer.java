@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "customers")
@@ -15,12 +16,19 @@ public class Customer {
 	private long id;
 
 	@Column(name = "first_name")
+	@NotNull
 	private String firstName;
 
 	@Column(name = "last_name")
+	@NotNull
 	private String lastName;
 
+	@Column(name = "ndi")
+	@NotNull
 	private String ndi;
+
+	@Column(name = "imageId")
+	private String imageId;
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<Purchase> purchases = new HashSet<>();
@@ -56,6 +64,10 @@ public class Customer {
 	public void setNdi(String ndi) {
 		this.ndi = ndi;
 	}
+
+	public String getImageId() { return imageId; }
+
+	public void setImageId(String imageId) { this.imageId = imageId; }
 
 	public Set<Purchase> getPurchases() {
 		return purchases;

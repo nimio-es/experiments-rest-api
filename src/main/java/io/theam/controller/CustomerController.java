@@ -1,19 +1,28 @@
 package io.theam.controller;
 
 import io.theam.model.Customer;
+import io.theam.model.Image;
 import io.theam.model.Purchase;
 import io.theam.repository.CustomerRepository;
+import io.theam.util.UtilBase64Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
 	@Autowired
 	private CustomerRepository customerRepo;
@@ -35,8 +44,8 @@ public class CustomerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> addCustomer(@RequestBody Customer person) {
-		return new ResponseEntity<>(customerRepo.save(person), HttpStatus.CREATED);
+	public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
+		return new ResponseEntity<>(customerRepo.save(customer), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -56,4 +65,65 @@ public class CustomerController {
 		}
 	}
 
+
+    /*****
+     * IMAGES
+     *****/
+
+    @RequestMapping(value = "/{id}/image", method = RequestMethod.POST)
+    public String addImageToCustomer(@PathVariable Long id, @RequestBody Image image) {
+
+        logger.info("Associate an image to customer {}", id);
+
+        // the file name
+        final String image_id = UUID.randomUUID().toString();
+        final String[] partsOfName = image.getName().split("\\.");  // TO NOT INCLUDE FILEUTILS ONLY FOR THIS CASE
+        final String fileNameExtension =
+                Optional.ofNullable(partsOfName[partsOfName.length - 1]).map(String::toLowerCase).orElse("");
+        final String path = System.getProperty("java.io.tmpdir") + File.pathSeparator + image_id + "." + fileNameExtension;
+
+        if(!"jpg".equals(fileNameExtension) && !"gif".equals(fileNameExtension)) {
+            throw new RuntimeException("Only allowed to work with JPG or GIF images");
+        }
+
+        // gets the customer
+        final Customer customer = customerRepo.findOne(id);
+        final String currentImage = customer.getImageId();
+        customer.setImageId(image_id);
+
+        // saves the image
+        UtilBase64Image.decoder(image.getData(), path);
+
+        // saves the modified customer
+        customerRepo.save(customer);
+
+        // its necessary to remove the old image
+        // TODO: to be done
+
+        return "/Post Successful";
+    }
+
+    @RequestMapping(value = "/{id}/image", method = RequestMethod.GET)
+    public Image getImageFromCustomer(@PathVariable Long id) {
+
+        // gets the customer
+        final Customer customer = customerRepo.findOne(id);
+        final String currentImage = customer.getImageId();
+
+        if(currentImage == null) {
+            logger.info("The customer has no image associated");
+            return null;
+        }
+
+        final File[] filesWithPrefix = new File(System.getProperty("java.io.tmpdir")).listFiles(fn -> fn.getName().startsWith(currentImage));
+        if(filesWithPrefix.length == 0) return null; // DOESN'T EXIST
+        final String imagePath = filesWithPrefix[0].getAbsolutePath();
+        final String imageBase64 = UtilBase64Image.encoder(imagePath);
+
+        if(imageBase64 != null) {
+            Image image = new Image(new File(imagePath).getName(), imageBase64);
+            return image;
+        }
+        return null;
+    }
 }

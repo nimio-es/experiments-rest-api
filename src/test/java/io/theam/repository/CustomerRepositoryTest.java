@@ -28,11 +28,13 @@ public class CustomerRepositoryTest {
     public void repositorySavesPerson() {
         Customer customer = new Customer();
         customer.setFirstName("Oscar");
+        customer.setLastName("Pepino");
         customer.setNdi("000000000X");
         
         Customer result = customerRepository.save(customer);
         
         assertEquals(result.getFirstName(), "Oscar");
+        assertEquals(result.getLastName(), "Pepino");
         assertEquals(result.getNdi(), "000000000X");
     }
 
@@ -42,6 +44,7 @@ public class CustomerRepositoryTest {
         // Given: person saved
         Customer customer = new Customer();
         customer.setFirstName("Manuel");
+        customer.setLastName("Mañoso");
         customer.setNdi("000000000X");
         customer.setPurchases(Collections.emptySet());
         customerRepository.save(customer);
