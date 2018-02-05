@@ -16,11 +16,11 @@ What I have to do:
 - Optionally, one or more cucumber tests to check one or more end-points
 
 
-## The Fast Lane
+## The Solution
 
-Despite my wishes, I don't have too much time. The Internet is plagued with a lot of examples and projects that solve similar cases. Copying and pasting (and gutting and recomposing too) is a common practice and approach in the profession. Google `spring+boot+oauth2` and you'll get a lot of examples. Here my contribution to increase the Entropy of Universe. 
+A multimodule Maven project with a Server (API REST), a Common Library and a Command Line Client to interact with the server.
 
-I really hope to find time (and feel like) to continue with the master branch and keep trying things.
+Spring Boot is the heart of the solution. Because develop with Spring Boot is really fast.
 
 
 ### Inspiring resources
@@ -42,12 +42,13 @@ This version does:
 - There is an oauth url (auto-generated from Spring Boot) to get a token using password Grant Type and client-id + client-secret
 - Unit tests and a pair of cucumber scenarios 
 - Check role admin
+- Work with binary data (customer image)
+- Command Line Client with most of the operations implemented.
 
 This version does not (yet):
 
 - Manage purchases 
 - Poor version of purchase (It's necessary refer articles, for example?)
-- Work with binary data (customer image)
 
 Of those, the last one would be the real challenges. For the rest of those would be more of the same.
 
@@ -66,13 +67,13 @@ cd theam.io-api-rest-stage-2
 Build: 
 
 ```bash
-mvn clean
-mvn package
+mvn clean install
 ```
 
 Run the API using:
 
 ```bash
+cd server
 mvn spring-boot:run
 ```
 
@@ -81,9 +82,7 @@ Now you can interact with it (some user preexist because the database is populat
 To end the session you can break the execution with `CTRL+C`. 
 
 
-## Simple use
-
-Generally I prefer [HTTPie](https://httpie.org/) instead CURL. It's recommendable to install [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin. In current version I use the JWT token simulation to protect the API.   
+## Use the API
 
 ### API URIs
 
@@ -107,8 +106,70 @@ These are the resources offered by the API.
 | /customers/:id/purchases | PUT | Change information of a exist purchase in the list of a customer |
 | /customers/:id/purchases/:idpurchase | DELETE | Removes a purchase from the list of purchases of a customer |
 
+### Access using CLI (recommended)
 
-### Before call
+You cau use the Command Line Client to access the API. This option is recommended because the part of get OAuth Token is hidden to the user.
+
+To use the client, open a new console terminal and go to client subforlder. Yoy can create an alias to the jar:
+
+```bash
+alias theam-cli="java -jar PATH_TO_TARGET_FOLDER/client-1.0.0-SNAPSHOT.jar"
+``` 
+
+After that you can call the command line using this alias. Use help command to know how to use:
+
+```bash
+theam-cli help
+```
+
+#### Authentication
+
+All operation required the username and password information (noelia.capaz, password), but you can export environment variables to set those values and avoid to pass each time:
+
+```bash
+export THEAM_USERNAME=noelia.capaz
+export THEAM_PASSWORD=password
+```
+
+If you use other user (`pepito.currito`) every operation will fail.
+
+#### Examples
+
+* Get customer list (json format):
+
+    ```bash
+    theam-cli customers
+    ```
+* Add a new customer:
+
+    ```bash
+    theam-cli customers add --first-name Oscar --last-name Rinconero --ndi 0000000
+    ```
+
+* Show an existent customer:
+
+    ```bash
+    theam-cli customers add --id 2 
+    ```
+
+* Set the image of a customer (the image has to exist):
+
+    ```bash
+    theam-cli customers image set --id 1 PATH_TO_EXISTENT_IMAGE 
+    ```
+    
+* Get/Download the image of a customer and show in default application:
+
+    ```bash
+    theam-cli customers image get --id 1 --show PATH_TO_SAVE_IMAGE
+    ```
+
+
+### Access using HTTPie (or CURL)
+
+Generally I prefer [HTTPie](https://httpie.org/) instead CURL. It's recommendable to install [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin. In current version I use the JWT token simulation to protect the API.   
+
+#### Before call
 
 With each call to the API you need to include an oauth token. To get one, use the next command line operation:
 
@@ -123,7 +184,7 @@ Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` wit
 export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
 ```
 
-### Different roles
+#### Different roles
 
 In this example you can use two different users with distinct roles. 
 
@@ -134,7 +195,7 @@ Both users has `password` as password. Isn't easy?
 
 You can use `pepito.currito`to prove that only users with administrative permissions can access the API methods.
 
-### Examples
+#### Examples
 
 These are examples of use the API with HTTPie. Use in all of these the parameter `--auth-type=jwt -v` 
 
