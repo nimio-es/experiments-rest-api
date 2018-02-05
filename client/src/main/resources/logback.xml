@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <appender name="console-color" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%highlight(%level)] %magenta(%d) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console-no-color" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%level] %d - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file-no-color" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/.samuel/logs/logFile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${user.home}/.samuel/logs/logFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 50MB -->
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%d [%level] %thread %logger{30}:%line %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root>
+        <!-- TODO: Make this work with CLI options instead of java options (-Ddisable-colors...) --> 
+        <!-- Level defined by -Dverbose (debug mode) or log-level (any value) -->
+        <if condition='isDefined("verbose")'>
+            <then>
+                <level value="DEBUG" />
+            </then>
+            <else>
+                <if condition='isDefined("log-level")'>
+                    <then>
+                        <level value="${log-level}" />
+                    </then>
+                    <else>
+                        <level value="INFO" />
+                    </else>
+                </if>
+            </else>
+        </if>
+        
+        <if condition='isDefined("disable-colors")'>
+            <then>
+                <if condition='!isDefined("disable-console-logging")'>
+                    <then>
+                        <appender-ref ref="console-no-color" />
+                    </then>
+                </if>
+                <if condition='!isDefined("disable-file-logging")'>
+                    <then>
+                        <appender-ref ref="file-no-color" />
+                    </then>
+                </if>
+            </then>
+            <else>
+                <if condition='!isDefined("disable-console-logging")'>
+                    <then>
+                        <appender-ref ref="console-color" />
+                    </then>
+                </if>
+                <if condition='!isDefined("disable-file-logging")'>
+                    <then>
+                        <appender-ref ref="file-no-color" />
+                    </then>
+                </if>
+            </else>
+        </if>
+    </root>
+
+    <logger name="org.eclipse" level="WARN" />
+    <logger name="io.sentry" level="OFF" />
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+</configuration>

@@ -28,7 +28,7 @@ public class CustomerController {
 	private CustomerRepository customerRepo;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Collection<Customer>> getPeople() {
+	public ResponseEntity<Collection<Customer>> getCustomerList() {
 		return new ResponseEntity<>(customerRepo.findAll(), HttpStatus.OK);
 	}
 
