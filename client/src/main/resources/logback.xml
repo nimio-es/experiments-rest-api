@@ -13,10 +13,10 @@
     </appender>
 
     <appender name="file-no-color" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/.samuel/logs/logFile.log</file>
+        <file>${user.home}/.theam/logs/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${user.home}/.samuel/logs/logFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${user.home}/.theam/logs/logFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 50MB -->
                 <maxFileSize>50MB</maxFileSize>

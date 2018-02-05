@@ -1,5 +1,6 @@
 package io.theam.client.commands;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.rvesse.airline.annotations.Command;
 import io.theam.client.service.RestClient;
 import io.theam.model.Customer;
@@ -15,10 +16,12 @@ public class CustomerListCommand extends BaseCommand {
         Collection<Customer> customers = null;
         customers = new RestClient(username, password).getCustomers();
 
-        for(Object c: customers) {
-            System.out.println(c.getClass().getCanonicalName());
+        try {
+            System.out.println(pretty_print_json.writeValueAsString(customers));
+        } catch (JsonProcessingException e) {
+            new RuntimeException(e);
         }
-
+        System.out.println("---------");
         System.out.println("Number of customers: " + Integer.toString(customers.size()));
     }
 }

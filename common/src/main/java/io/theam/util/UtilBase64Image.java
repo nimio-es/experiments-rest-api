@@ -1,5 +1,8 @@
 package io.theam.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +11,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class UtilBase64Image {
+
+    private static final Logger logger = LoggerFactory.getLogger(UtilBase64Image.class);
+
     public static String encoder(String imagePath) {
         File file = new File(imagePath);
         try (FileInputStream imageInFile = new FileInputStream(file)) {
@@ -26,6 +32,7 @@ public class UtilBase64Image {
     }
 
     public static void decoder(String base64Image, String pathFile) {
+        logger.info("Write to file: {}", pathFile);
         try (FileOutputStream imageOutFile = new FileOutputStream(pathFile)) {
             // Converting a Base64 String into Image byte array
             byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
@@ -35,5 +42,6 @@ public class UtilBase64Image {
         } catch (IOException ioe) {
             System.out.println("Exception while reading the Image " + ioe);
         }
+        logger.info("File saved!");
     }
 }

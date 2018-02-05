@@ -71,16 +71,22 @@ public class CustomerController {
      *****/
 
     @RequestMapping(value = "/{id}/image", method = RequestMethod.POST)
-    public String addImageToCustomer(@PathVariable Long id, @RequestBody Image image) {
+    public ResponseEntity<Customer> addImageToCustomer(@PathVariable Long id, @RequestBody Image image) {
 
         logger.info("Associate an image to customer {}", id);
+        logger.info(image.toString());
 
         // the file name
         final String image_id = UUID.randomUUID().toString();
         final String[] partsOfName = image.getName().split("\\.");  // TO NOT INCLUDE FILEUTILS ONLY FOR THIS CASE
         final String fileNameExtension =
                 Optional.ofNullable(partsOfName[partsOfName.length - 1]).map(String::toLowerCase).orElse("");
-        final String path = System.getProperty("java.io.tmpdir") + File.pathSeparator + image_id + "." + fileNameExtension;
+        final File theamPath = new File(new File(System.getProperty("java.io.tmpdir")),"theam");
+        if(!theamPath.exists()) theamPath.mkdir();
+        final File imagesPath = new File(theamPath,"images");
+        if(!imagesPath.exists()) imagesPath.mkdir(); // create the directory if it doesn't exist
+        final String path =
+                new File(imagesPath,image_id + "." + fileNameExtension).getAbsolutePath();
 
         if(!"jpg".equals(fileNameExtension) && !"gif".equals(fileNameExtension)) {
             throw new RuntimeException("Only allowed to work with JPG or GIF images");
@@ -95,12 +101,14 @@ public class CustomerController {
         UtilBase64Image.decoder(image.getData(), path);
 
         // saves the modified customer
-        customerRepo.save(customer);
+        final Customer savedCustomer = customerRepo.save(customer);
 
         // its necessary to remove the old image
         // TODO: to be done
 
-        return "/Post Successful";
+        logger.info("All was saved!");
+
+        return new ResponseEntity(savedCustomer, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/{id}/image", method = RequestMethod.GET)
@@ -115,7 +123,11 @@ public class CustomerController {
             return null;
         }
 
-        final File[] filesWithPrefix = new File(System.getProperty("java.io.tmpdir")).listFiles(fn -> fn.getName().startsWith(currentImage));
+        final File theamPath = new File(new File(System.getProperty("java.io.tmpdir")),"theam");
+        if(!theamPath.exists()) theamPath.mkdir();
+        final File imagesPath = new File(theamPath,"images");
+        if(!imagesPath.exists()) imagesPath.mkdir(); // create the directory if it doesn't exist
+        final File[] filesWithPrefix = imagesPath.listFiles(fn -> fn.getName().startsWith(currentImage));
         if(filesWithPrefix.length == 0) return null; // DOESN'T EXIST
         final String imagePath = filesWithPrefix[0].getAbsolutePath();
         final String imageBase64 = UtilBase64Image.encoder(imagePath);
