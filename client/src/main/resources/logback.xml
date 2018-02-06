@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-    <appender name="console-color" class="ch.qos.logback.core.ConsoleAppender">
+    <appender fileName="console-color" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>[%highlight(%level)] %magenta(%d) - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="console-no-color" class="ch.qos.logback.core.ConsoleAppender">
+    <appender fileName="console-no-color" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>[%level] %d - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="file-no-color" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender fileName="file-no-color" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/.theam/logs/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
@@ -77,7 +77,7 @@
         </if>
     </root>
 
-    <logger name="org.eclipse" level="WARN" />
-    <logger name="io.sentry" level="OFF" />
+    <logger fileName="org.eclipse" level="WARN" />
+    <logger fileName="io.sentry" level="OFF" />
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 </configuration>

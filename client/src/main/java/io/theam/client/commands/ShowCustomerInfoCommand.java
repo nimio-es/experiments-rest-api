@@ -39,7 +39,7 @@ public class ShowCustomerInfoCommand extends BaseCommand {
     protected void doRun() {
 
         final RestClient restClient = new RestClient(username, password);
-        Customer customer = customerId > 0
+        final Customer customer = customerId > 0
                 ? restClient.getCustomer(customerId)
                 : !StringUtils.isEmpty(firstName)
                     ? restClient.lookupCustomerFirstName(firstName)

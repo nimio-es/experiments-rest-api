@@ -1,7 +1,9 @@
 package io.theam.client.service;
 
+import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
 import io.theam.model.Customer;
 import io.theam.model.Image;
+import io.theam.model.api.ImageData;
 import io.theam.util.UtilBase64Image;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,9 @@ public final class RestClient {
         DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
 
         this.restTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
-        restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
+        final MappingJackson2HttpMessageConverter mpcv = new MappingJackson2HttpMessageConverter();
+        ExtensionsKt.registerKotlinModule(mpcv.getObjectMapper());
+        restTemplate.setMessageConverters(Arrays.asList(mpcv));
     }
 
     public Collection<Customer> getCustomers() {
@@ -93,10 +97,10 @@ public final class RestClient {
         final String name = fileImage.getName();
         final String data = UtilBase64Image.encoder(filePath);
 
-        final Image image = new Image(name, data);
+        final ImageData image = new ImageData(name, data);
 
-        ResponseEntity<Customer> postResponse = restTemplate.postForEntity(postUrl, image, Customer.class);
-        return !StringUtils.isEmpty(postResponse.getBody().getImageId());
+        ResponseEntity<ImageData> postResponse = restTemplate.postForEntity(postUrl, image, ImageData.class);
+        return postResponse.getStatusCode().is2xxSuccessful();
     }
 
     public Image getCustomerImage(final long customerId) {

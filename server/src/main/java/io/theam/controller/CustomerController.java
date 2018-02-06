@@ -2,9 +2,10 @@ package io.theam.controller;
 
 import io.theam.model.Customer;
 import io.theam.model.Image;
-import io.theam.model.Purchase;
+import io.theam.model.api.ImageData;
 import io.theam.repository.CustomerRepository;
-import io.theam.util.UtilBase64Image;
+import io.theam.repository.ImageRepository;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/customers")
@@ -26,6 +26,9 @@ public class CustomerController {
 
     @Autowired
 	private CustomerRepository customerRepo;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     /*****
      * CUSTOMERS
@@ -97,71 +100,36 @@ public class CustomerController {
      *****/
 
     @RequestMapping(value = "/{id}/image", method = RequestMethod.POST)
-    public ResponseEntity<Customer> addImageToCustomer(@PathVariable Long id, @RequestBody Image image) {
+    public ResponseEntity<ImageData> addImageToCustomer(@PathVariable final Long id, @RequestBody final ImageData image) {
 
         logger.info("Associate an image to customer {}", id);
-        logger.info(image.toString());
 
-        // the file name
-        final String image_id = UUID.randomUUID().toString();
-        final String[] partsOfName = image.getName().split("\\.");  // TO NOT INCLUDE FILEUTILS ONLY FOR THIS CASE
-        final String fileNameExtension =
-                Optional.ofNullable(partsOfName[partsOfName.length - 1]).map(String::toLowerCase).orElse("");
-        final File theamPath = new File(new File(System.getProperty("java.io.tmpdir")),"theam");
-        if(!theamPath.exists()) theamPath.mkdir();
-        final File imagesPath = new File(theamPath,"images");
-        if(!imagesPath.exists()) imagesPath.mkdir(); // create the directory if it doesn't exist
-        final String path =
-                new File(imagesPath,image_id + "." + fileNameExtension).getAbsolutePath();
-
-        if(!"jpg".equals(fileNameExtension) && !"gif".equals(fileNameExtension)) {
-            throw new RuntimeException("Only allowed to work with JPG or GIF images");
+        // search the image
+        Image storedImage = imageRepository.findByCustomerId(id);
+        if(storedImage == null) {
+            storedImage = new Image();
+            storedImage.setCustomer(customerRepo.findOne(id));
         }
+        storedImage.setFileName(image.getFileName());
+        storedImage.setFileData(image.getFileData());
 
-        // gets the customer
-        final Customer customer = customerRepo.findOne(id);
-        final String currentImage = customer.getImageId();
-        customer.setImageId(image_id);
-
-        // saves the image
-        UtilBase64Image.decoder(image.getData(), path);
-
-        // saves the modified customer
-        final Customer savedCustomer = customerRepo.save(customer);
-
-        // its necessary to remove the old image
-        // TODO: to be done
-
-        logger.info("All was saved!");
-
-        return new ResponseEntity(savedCustomer, HttpStatus.ACCEPTED);
+        Image savedImage = imageRepository.save(storedImage);
+        return new ResponseEntity(
+                savedImage != null ? image : null,
+                savedImage != null ? HttpStatus.ACCEPTED : HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/{id}/image", method = RequestMethod.GET)
-    public Image getImageFromCustomer(@PathVariable Long id) {
+    public ResponseEntity<ImageData> getImageFromCustomer(@PathVariable Long id) throws IOException {
 
-        // gets the customer
-        final Customer customer = customerRepo.findOne(id);
-        final String currentImage = customer.getImageId();
+        // search the image
+        final Image image =  imageRepository.findByCustomerId(id);
 
-        if(currentImage == null) {
-            logger.info("The customer has no image associated");
-            return null;
+        logger.info("{}", new ObjectMapper().writeValueAsString(image));
+
+        if(image == null) {
+            return new ResponseEntity((ImageData)null, HttpStatus.NOT_FOUND);
         }
-
-        final File theamPath = new File(new File(System.getProperty("java.io.tmpdir")),"theam");
-        if(!theamPath.exists()) theamPath.mkdir();
-        final File imagesPath = new File(theamPath,"images");
-        if(!imagesPath.exists()) imagesPath.mkdir(); // create the directory if it doesn't exist
-        final File[] filesWithPrefix = imagesPath.listFiles(fn -> fn.getName().startsWith(currentImage));
-        if(filesWithPrefix.length == 0) return null; // DOESN'T EXIST
-        final String imagePath = filesWithPrefix[0].getAbsolutePath();
-        final String imageBase64 = UtilBase64Image.encoder(imagePath);
-
-        if(imageBase64 != null) {
-            Image image = new Image(new File(imagePath).getName(), imageBase64);
-            return image;
-        }
-        return null;
+        return new ResponseEntity(new ImageData(image.getFileName(), image.getFileData()), HttpStatus.OK);
     }
 }

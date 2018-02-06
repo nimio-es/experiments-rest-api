@@ -2,6 +2,7 @@ package io.theam.controller;
 
 import io.theam.model.Customer;
 import io.theam.repository.CustomerRepository;
+import io.theam.repository.ImageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,10 @@ public class CustomerControllerTest {
 
 	@MockBean
 	private CustomerRepository customerRepo;
-	
+
+	@MockBean
+	private ImageRepository imageRepository;
+
 	private Customer customer;
 	
 	@Before

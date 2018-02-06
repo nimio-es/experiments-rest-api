@@ -5,8 +5,8 @@
 What I have to do:
 
 - Rest API for Customers. Each customer have to be defined with 
-    - First name
-    - Last name
+    - First fileName
+    - Last fileName
     - National Document of Identity
     - Image (optional)
     - With each customer also store last purchases information
@@ -42,7 +42,7 @@ This version does:
 - There is an oauth url (auto-generated from Spring Boot) to get a token using password Grant Type and client-id + client-secret
 - Unit tests and a pair of cucumber scenarios 
 - Check role admin
-- Work with binary data (customer image)
+- Work with binary fileData (customer image)
 - Command Line Client with most of the operations implemented.
 
 This version does not (yet):
@@ -91,8 +91,8 @@ These are the resources offered by the API.
 | URN | VERB | Purpose |
 | --- | --- | --- |
 | /customers  | GET | List all customers (if use query param "sorted", the result will be in order) |
-| /customers/:id | GET | Gets data for the customer with :id |
-| /customers | POST | Adds a new customer (when data is correct) |
+| /customers/:id | GET | Gets fileData for the customer with :id |
+| /customers | POST | Adds a new customer (when fileData is correct) |
 | /customers | PUT | Change base information of the customer |
 | /customers/:id | DELETE | Deletes the customer with the :id |
 | /customers/:id | OPTIONS | Checks if a customer exists with that :id |
@@ -143,7 +143,7 @@ If you use other user (`pepito.currito`) every operation will fail.
 * Add a new customer:
 
     ```bash
-    theam-cli customers add --first-name Oscar --last-name Rinconero --ndi 0000000
+    theam-cli customers add --first-fileName Oscar --last-fileName Rinconero --ndi 0000000
     ```
 
 * Show an existent customer:
@@ -205,7 +205,7 @@ These are examples of use the API with HTTPie. Use in all of these the parameter
     http --auth-type=jwt -v [GET] http://localhost:8080/customers
     ```
 
-* Get data for first customer (id 1) (**http://localhost:80807/customers/1**):
+* Get fileData for first customer (id 1) (**http://localhost:80807/customers/1**):
 
     ```bash
     http --auth-type=jwt -v [GET] http://localhost:8080/customers/1
@@ -217,7 +217,7 @@ These are examples of use the API with HTTPie. Use in all of these the parameter
     http --auth-type=jwt -v POST http://localhost:8080/customers firstName=Saulo lastName=Alvarado nid=99999999X
     ```
     
-* Change/Edit data of a customer (**http://localhost:8080/customers** with **PUT verb**):
+* Change/Edit fileData of a customer (**http://localhost:8080/customers** with **PUT verb**):
 
      ```bash
      http --auth-type=jwt -v PUT http://localhost:8080/customers id=1 firstName=Saulo lastName="Alvarado Mateos" nid=99999999X

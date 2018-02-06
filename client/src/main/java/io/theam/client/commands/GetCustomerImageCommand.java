@@ -30,7 +30,7 @@ public class GetCustomerImageCommand extends BaseCommandWithId {
             System.out.println("Image downloaded but not stored locally (no image path defined)");
             System.out.println(image.toString());
         }else{
-            UtilBase64Image.decoder(image.getData(), imagePath);
+            UtilBase64Image.decoder(image.getFileData(), imagePath);
 
             if(showImage) {
                 try {

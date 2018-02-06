@@ -12,8 +12,15 @@ CREATE TABLE customers (
     customer_id BIGINT PRIMARY KEY auto_increment,
     first_name VARCHAR(32) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
-    ndi VARCHAR(12) NOT NULL,
-    image_id VARCHAR(64)
+    ndi VARCHAR(12) NOT NULL
+);
+
+DROP TABLE IF EXISTS images;
+CREATE TABLE images (
+    image_id BIGINT PRIMARY KEY auto_increment,
+    customer_id BIGINT REFERENCES customers (customer_id),
+    file_name VARCHAR(200) NOT NULL,
+    file_data CLOB NOT NULL
 );
 
 DROP TABLE IF EXISTS skills;

@@ -1,35 +1,59 @@
 package io.theam.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "images")
 public class Image {
-    private String name;
-    private String data;
 
-    public Image(){
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "image_id")
+    private long id;
 
+    @OneToOne
+    @JoinColumn (name="customer_id")
+    private Customer customer;
 
-    public Image(String name, String data){
-        this.name = name;
-        this.data = data;
-    }
+    @Column(name = "file_name")
+    @NotNull
+    private String fileName;
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getData() {
-        return data;
-    }
-    public void setData(String data) {
-        this.data = data;
+    @Column(name = "file_data")
+    @NotNull
+    @Lob
+    private String fileData;
+
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        String info = String.format("Image name = %s, data = %s", name, data);
-        return info;
+    public void setId(long id) {
+        this.id = id;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(String fileData) {
+        this.fileData = fileData;
+    }
 }
