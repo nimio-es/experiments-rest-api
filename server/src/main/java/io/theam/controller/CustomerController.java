@@ -2,6 +2,8 @@ package io.theam.controller;
 
 import io.theam.model.Customer;
 import io.theam.model.Image;
+import io.theam.model.api.CustomerData;
+import io.theam.model.api.CustomerResponse;
 import io.theam.model.api.ImageData;
 import io.theam.repository.CustomerRepository;
 import io.theam.repository.ImageRepository;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customers")
@@ -34,52 +37,72 @@ public class CustomerController {
      * CUSTOMERS
      *****/
 
+    private static CustomerResponse from(final Customer customer) {
+        return
+                new CustomerResponse(
+                        customer.getId(),
+                        new CustomerData(customer.getFirstName(), customer.getLastName(), customer.getNdi())
+                );
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Collection<Customer>> getCustomerList() {
-		return new ResponseEntity<>(customerRepo.findAll(), HttpStatus.OK);
+	public ResponseEntity<Collection<CustomerResponse>> getCustomerList() {
+		return new ResponseEntity<>(
+		        customerRepo.findAll().stream()
+                        .map(CustomerController::from)
+                        .collect(Collectors.toList()),
+                HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Customer> getPerson(@PathVariable long id) {
+	public ResponseEntity<CustomerResponse> getPerson(@PathVariable long id) {
         return Optional
                 .ofNullable(customerRepo.findOne(id))
-                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
 	}
 
 	@RequestMapping(value = "firstName/{firstName}", method = RequestMethod.GET)
-	public ResponseEntity<Customer> lookupPersonFirstName(@PathVariable String firstName) {
+	public ResponseEntity<CustomerResponse> lookupPersonFirstName(@PathVariable String firstName) {
         return Optional
                 .ofNullable(customerRepo.findByFirstName(firstName))
-                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(value = "lastName/{lastName}", method = RequestMethod.GET)
-    public ResponseEntity<Customer> lookupPersonLastName(@PathVariable String lastName) {
+    public ResponseEntity<CustomerResponse> lookupPersonLastName(@PathVariable String lastName) {
         return Optional
                 .ofNullable(customerRepo.findByLastName(lastName))
-                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(value = "ndi/{ndi}", method = RequestMethod.GET)
-    public ResponseEntity<Customer> lookupPersonNdi(@PathVariable String ndi) {
+    public ResponseEntity<CustomerResponse> lookupPersonNdi(@PathVariable String ndi) {
         return Optional
                 .ofNullable(customerRepo.findByNdi(ndi))
-                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
-		return new ResponseEntity<>(customerRepo.save(customer), HttpStatus.CREATED);
+	public ResponseEntity<?> addCustomer(@RequestBody CustomerData customer) {
+
+        final Customer customerToSave = new Customer();
+        customerToSave.setFirstName(customer.getFirstName());
+        customerToSave.setLastName(customer.getLastName());
+        customerToSave.setNdi(customer.getNdi());
+
+        final Customer saved = customerRepo.save(customerToSave);
+
+		return new ResponseEntity<>(from(saved), saved != null ? HttpStatus.CREATED: HttpStatus.INSUFFICIENT_STORAGE);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteCustomer(@PathVariable long id, Principal principal) {
+	public ResponseEntity<Void> deleteCustomer(@PathVariable long id) {
 		customerRepo.delete(id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 /*

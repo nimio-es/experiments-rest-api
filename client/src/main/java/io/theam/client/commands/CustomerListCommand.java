@@ -3,7 +3,7 @@ package io.theam.client.commands;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.rvesse.airline.annotations.Command;
 import io.theam.client.service.RestClient;
-import io.theam.model.Customer;
+import io.theam.model.api.CustomerResponse;
 
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ public class CustomerListCommand extends BaseCommand {
     @Override
     public void doRun() {
 
-        Collection<Customer> customers = null;
+        Collection<CustomerResponse> customers = null;
         customers = new RestClient(username, password).getCustomers();
 
         try {

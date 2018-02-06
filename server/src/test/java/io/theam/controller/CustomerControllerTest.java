@@ -50,10 +50,10 @@ public class CustomerControllerTest {
 	public void getPersonTest() throws Exception {
 		given(customerRepo.findOne(1l)).willReturn(customer);
 		mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
-				.andExpect(jsonPath("$.id", is(1)))
-				.andExpect(jsonPath("$.firstName", is("Saulo")))
-				.andExpect(jsonPath("$.lastName", is("Alvarado Mateos")))
-				.andExpect(jsonPath("$.ndi", is("0000000X")));
+				.andExpect(jsonPath("$.customerId", is(1)))
+				.andExpect(jsonPath("$.customer.firstName", is("Saulo")))
+				.andExpect(jsonPath("$.customer.lastName", is("Alvarado Mateos")))
+				.andExpect(jsonPath("$.customer.ndi", is("0000000X")));
 	}
 	
 	@Test
@@ -68,10 +68,10 @@ public class CustomerControllerTest {
 		
 		given(customerRepo.findAll()).willReturn(customers);
 		mvc.perform(get("/customers").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
-				.andExpect(jsonPath("$[0].id", is(1)))
-				.andExpect(jsonPath("$[0].firstName", is("Saulo")))
-				.andExpect(jsonPath("$[0].lastName", is("Alvarado Mateos")))
-				.andExpect(jsonPath("$[0].ndi", is("0000000X")));
+				.andExpect(jsonPath("$[0].customerId", is(1)))
+				.andExpect(jsonPath("$[0].customer.firstName", is("Saulo")))
+				.andExpect(jsonPath("$[0].customer.lastName", is("Alvarado Mateos")))
+				.andExpect(jsonPath("$[0].customer.ndi", is("0000000X")));
 	}
 
 }

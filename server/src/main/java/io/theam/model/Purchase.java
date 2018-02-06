@@ -19,7 +19,7 @@ public class Purchase {
 	private Date date;
 
 	@ManyToOne
-	@JoinColumn (name="customer_id")
+	@JoinColumn (name="customerId")
 	private Customer customer;
 
 	private long amount;

@@ -1,11 +1,10 @@
 package io.theam.client.service;
 
 import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
-import io.theam.model.Customer;
-import io.theam.model.Image;
+import io.theam.model.api.CustomerData;
+import io.theam.model.api.CustomerResponse;
 import io.theam.model.api.ImageData;
 import io.theam.util.UtilBase64Image;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -43,44 +42,44 @@ public final class RestClient {
         restTemplate.setMessageConverters(Arrays.asList(mpcv));
     }
 
-    public Collection<Customer> getCustomers() {
+    public Collection<CustomerResponse> getCustomers() {
         final String getUrl = base_customers_url;
 
-        ResponseEntity<Collection<Customer>> customers =
+        ResponseEntity<Collection<CustomerResponse>> customers =
                 restTemplate.getForEntity(
                         getUrl,
-                        (Class<Collection<Customer>>)(Class)Collection.class);
+                        (Class<Collection<CustomerResponse>>)(Class)Collection.class);
 
         return customers.getBody();
     }
 
-    public Customer getCustomer(final long customerId) {
+    public CustomerResponse getCustomer(final long customerId) {
         final String getUrl = String.format(base_customers_url + "/%d", customerId);
-        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        ResponseEntity<CustomerResponse> customer = restTemplate.getForEntity(getUrl, CustomerResponse.class);
         return customer.getBody();
     }
 
-    public Customer lookupCustomerFirstName(final String firstName) {
+    public CustomerResponse lookupCustomerFirstName(final String firstName) {
         final String getUrl = String.format(base_customers_url + "/firstName/%s", firstName);
-        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        ResponseEntity<CustomerResponse> customer = restTemplate.getForEntity(getUrl, CustomerResponse.class);
         return customer.getBody();
     }
 
-    public Customer lookupCustomerLastName(final String lastName) {
+    public CustomerResponse lookupCustomerLastName(final String lastName) {
         final String getUrl = String.format(base_customers_url + "/lastName/%s", lastName);
-        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        ResponseEntity<CustomerResponse> customer = restTemplate.getForEntity(getUrl, CustomerResponse.class);
         return customer.getBody();
     }
 
-    public Customer lookupCustomerNdi(final String ndi) {
+    public CustomerResponse lookupCustomerNdi(final String ndi) {
         final String getUrl = String.format(base_customers_url + "/ndi/%s", ndi);
-        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        ResponseEntity<CustomerResponse> customer = restTemplate.getForEntity(getUrl, CustomerResponse.class);
         return customer.getBody();
     }
 
-    public Customer addCustomer(final Customer protoCustomer) {
+    public CustomerResponse addCustomer(final CustomerData protoCustomer) {
         final String postUrl = base_customers_url;
-        ResponseEntity<Customer> customer = restTemplate.postForEntity(postUrl, protoCustomer, Customer.class);
+        ResponseEntity<CustomerResponse> customer = restTemplate.postForEntity(postUrl, protoCustomer, CustomerResponse.class);
         return customer.getBody();
     }
 
@@ -103,9 +102,9 @@ public final class RestClient {
         return postResponse.getStatusCode().is2xxSuccessful();
     }
 
-    public Image getCustomerImage(final long customerId) {
+    public ImageData getCustomerImage(final long customerId) {
         final String getUrl = String.format(base_customers_image_url, customerId);
-        return restTemplate.getForEntity(getUrl, Image.class).getBody();
+        return restTemplate.getForEntity(getUrl, ImageData.class).getBody();
     }
 
 }

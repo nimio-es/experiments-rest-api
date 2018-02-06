@@ -13,7 +13,7 @@ public class Image {
     private long id;
 
     @OneToOne
-    @JoinColumn (name="customer_id")
+    @JoinColumn (name="customerId")
     private Customer customer;
 
     @Column(name = "file_name")

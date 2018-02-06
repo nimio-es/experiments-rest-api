@@ -5,6 +5,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.theam.App;
 import io.theam.model.Customer;
+import io.theam.model.api.CustomerData;
+import io.theam.model.api.CustomerResponse;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +36,7 @@ public class StepsDefinitions {
      * *************************************************************************************** ** */
 
     // TODO: Review this, because I think isn't the best way to do this
-    private static ResponseEntity<Customer> lastResponse = null;
+    private static ResponseEntity<CustomerResponse> lastResponse = null;
     private static String token;
 
     @Autowired
@@ -65,15 +67,12 @@ public class StepsDefinitions {
 
     @Given("^a system with some customers in the list$")
     public void a_system_with_one_customer_in_the_list() {
-        final Customer customer = new Customer();
-        customer.setFirstName("Paco");
-        customer.setLastName("Mer");
-        customer.setNdi("0000000X");
+        final CustomerData customer = new CustomerData("Paco", "Mer", "0000000X");
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
-        final HttpEntity<Customer> request = new HttpEntity<>(customer, headers);
-        Customer saved = testRestTemplate.postForObject(CUSTOMER_BASE_PATH, request, Customer.class);
-        assertThat(saved.getId(), notNullValue());
+        final HttpEntity<CustomerData> request = new HttpEntity<>(customer, headers);
+        CustomerResponse saved = testRestTemplate.postForObject(CUSTOMER_BASE_PATH, request, CustomerResponse.class);
+        assertThat(saved.getCustomerId(), notNullValue());
     }
 
     @When("^asking for customer (\\d+)$")
@@ -86,7 +85,7 @@ public class StepsDefinitions {
                         CUSTOMER_BASE_PATH + "/" + Long.toString(id),
                         HttpMethod.GET,
                         new HttpEntity<>(headers),
-                        Customer.class);
+                        CustomerResponse.class);
     }
 
     @Then("^the system responds correctly$")
@@ -97,9 +96,9 @@ public class StepsDefinitions {
     @Then("^the client receives correct customer number (\\d+) information$")
     public void the_client_receives_correct_customer_number_information(int arg1) {
         // this one preexists
-        assertThat(lastResponse.getBody().getFirstName(), is("Saulo"));
-        assertThat(lastResponse.getBody().getLastName(), is("Alvarado Mateos"));
-        assertThat(lastResponse.getBody().getNdi(), is("000000000X"));
+        assertThat(lastResponse.getBody().getCustomer().getFirstName(), is("Saulo"));
+        assertThat(lastResponse.getBody().getCustomer().getLastName(), is("Alvarado Mateos"));
+        assertThat(lastResponse.getBody().getCustomer().getNdi(), is("000000000X"));
     }
 
     @Then("^the system responds that customer was not found$")

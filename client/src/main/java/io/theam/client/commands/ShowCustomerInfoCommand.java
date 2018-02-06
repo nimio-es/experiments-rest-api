@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import io.theam.client.service.RestClient;
-import io.theam.model.Customer;
+import io.theam.model.api.CustomerResponse;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Optional;
 
 @Command(name = "show", description = "Shows the info of a customer")
 public class ShowCustomerInfoCommand extends BaseCommand {
@@ -39,7 +37,7 @@ public class ShowCustomerInfoCommand extends BaseCommand {
     protected void doRun() {
 
         final RestClient restClient = new RestClient(username, password);
-        final Customer customer = customerId > 0
+        final CustomerResponse customer = customerId > 0
                 ? restClient.getCustomer(customerId)
                 : !StringUtils.isEmpty(firstName)
                     ? restClient.lookupCustomerFirstName(firstName)

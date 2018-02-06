@@ -4,7 +4,7 @@ import com.github.rvesse.airline.annotations.Arguments;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import io.theam.client.service.RestClient;
-import io.theam.model.Image;
+import io.theam.model.api.ImageData;
 import io.theam.util.UtilBase64Image;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +24,7 @@ public class GetCustomerImageCommand extends BaseCommandWithId {
     @Override
     protected void doRun() {
 
-        Image image = new RestClient(username, password).getCustomerImage(customerId);
+        ImageData image = new RestClient(username, password).getCustomerImage(customerId);
 
         if(StringUtils.isEmpty(imagePath)) {
             System.out.println("Image downloaded but not stored locally (no image path defined)");

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import io.theam.client.service.RestClient;
-import io.theam.model.Customer;
+import io.theam.model.api.CustomerData;
+import io.theam.model.api.CustomerResponse;
 import org.apache.commons.lang3.StringUtils;
 
 @Command(name = "add", description = "Adds a new customer")
@@ -34,12 +35,9 @@ public class AddCustomerCommand extends BaseCommand {
     @Override
     protected void doRun() {
 
-        final Customer protoCustomer = new Customer();
-        protoCustomer.setFirstName(firstName);
-        protoCustomer.setLastName(lastName);
-        protoCustomer.setNdi(ndi);
+        final CustomerData protoCustomer = new CustomerData(firstName, lastName, ndi);
 
-        final Customer savedCustomer = new RestClient(username, password).addCustomer(protoCustomer);
+        final CustomerResponse savedCustomer = new RestClient(username, password).addCustomer(protoCustomer);
 
         try {
             System.out.println(pretty_print_json.writeValueAsString(savedCustomer));
