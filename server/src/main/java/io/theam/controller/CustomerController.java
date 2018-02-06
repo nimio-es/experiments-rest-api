@@ -24,26 +24,51 @@ public class CustomerController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-	@Autowired
+    @Autowired
 	private CustomerRepository customerRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
+    /*****
+     * CUSTOMERS
+     *****/
+
+    @RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Collection<Customer>> getCustomerList() {
 		return new ResponseEntity<>(customerRepo.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Customer> getPerson(@PathVariable long id) {
-		Customer person = customerRepo.findOne(id);
-
-		if (person != null) {
-			return new ResponseEntity<>(customerRepo.findOne(id), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND);
-		}
+        return Optional
+                .ofNullable(customerRepo.findOne(id))
+                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "firstName/{firstName}", method = RequestMethod.GET)
+	public ResponseEntity<Customer> lookupPersonFirstName(@PathVariable String firstName) {
+        return Optional
+                .ofNullable(customerRepo.findByFirstName(firstName))
+                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "lastName/{lastName}", method = RequestMethod.GET)
+    public ResponseEntity<Customer> lookupPersonLastName(@PathVariable String lastName) {
+        return Optional
+                .ofNullable(customerRepo.findByLastName(lastName))
+                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "ndi/{ndi}", method = RequestMethod.GET)
+    public ResponseEntity<Customer> lookupPersonNdi(@PathVariable String ndi) {
+        return Optional
+                .ofNullable(customerRepo.findByNdi(ndi))
+                .map(c -> new ResponseEntity<>(c, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((Customer)null, HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
 		return new ResponseEntity<>(customerRepo.save(customer), HttpStatus.CREATED);
 	}
@@ -53,7 +78,8 @@ public class CustomerController {
 		customerRepo.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+
+/*
 	@RequestMapping(value = "/{id}/purchases", method = RequestMethod.GET)
 	public ResponseEntity<Collection<Purchase>> getPersonParties(@PathVariable long id) {
 		Customer person = customerRepo.findOne(id);
@@ -64,7 +90,7 @@ public class CustomerController {
 			return new ResponseEntity<>((Collection<Purchase>)null, HttpStatus.NOT_FOUND);
 		}
 	}
-
+*/
 
     /*****
      * IMAGES

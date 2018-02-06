@@ -1,6 +1,5 @@
 package io.theam.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
@@ -21,7 +20,6 @@ public class Purchase {
 
 	@ManyToOne
 	@JoinColumn (name="customer_id")
-	@JsonBackReference
 	private Customer customer;
 
 	private long amount;

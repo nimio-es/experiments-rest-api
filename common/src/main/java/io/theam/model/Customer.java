@@ -30,9 +30,6 @@ public class Customer {
 	@Column(name = "imageId")
 	private String imageId;
 
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-	private Set<Purchase> purchases = new HashSet<>();
-
 	public long getId() {
 		return id;
 	}
@@ -68,12 +65,4 @@ public class Customer {
 	public String getImageId() { return imageId; }
 
 	public void setImageId(String imageId) { this.imageId = imageId; }
-
-	public Set<Purchase> getPurchases() {
-		return purchases;
-	}
-
-	public void setPurchases(Set<Purchase> purchases) {
-		this.purchases = purchases;
-	}
 }

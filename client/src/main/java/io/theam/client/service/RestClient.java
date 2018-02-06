@@ -56,6 +56,24 @@ public final class RestClient {
         return customer.getBody();
     }
 
+    public Customer lookupCustomerFirstName(final String firstName) {
+        final String getUrl = String.format(base_customers_url + "/firstName/%s", firstName);
+        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        return customer.getBody();
+    }
+
+    public Customer lookupCustomerLastName(final String lastName) {
+        final String getUrl = String.format(base_customers_url + "/lastName/%s", lastName);
+        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        return customer.getBody();
+    }
+
+    public Customer lookupCustomerNdi(final String ndi) {
+        final String getUrl = String.format(base_customers_url + "/ndi/%s", ndi);
+        ResponseEntity<Customer> customer = restTemplate.getForEntity(getUrl, Customer.class);
+        return customer.getBody();
+    }
+
     public Customer addCustomer(final Customer protoCustomer) {
         final String postUrl = base_customers_url;
         ResponseEntity<Customer> customer = restTemplate.postForEntity(postUrl, protoCustomer, Customer.class);

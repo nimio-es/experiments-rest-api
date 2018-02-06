@@ -82,12 +82,16 @@ public class StepsDefinitions {
         headers.add("Authorization", "Bearer " + token);
 
         lastResponse = testRestTemplate.
-                exchange(CUSTOMER_BASE_PATH + "/" + Long.toString(id), HttpMethod.GET, new HttpEntity<>(headers), Customer.class);
+                exchange(
+                        CUSTOMER_BASE_PATH + "/" + Long.toString(id),
+                        HttpMethod.GET,
+                        new HttpEntity<>(headers),
+                        Customer.class);
     }
 
     @Then("^the system responds correctly$")
     public void the_system_responds_correctly() {
-        assertThat(lastResponse.getStatusCode().value(), is(200));
+        assertThat(lastResponse.getStatusCode().value(), is(201));
     }
 
     @Then("^the client receives correct customer number (\\d+) information$")

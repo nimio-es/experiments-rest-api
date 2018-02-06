@@ -45,7 +45,7 @@ public class CustomerControllerTest {
 	@Test
 	public void getPersonTest() throws Exception {
 		given(customerRepo.findOne(1l)).willReturn(customer);
-		mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+		mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
 				.andExpect(jsonPath("$.id", is(1)))
 				.andExpect(jsonPath("$.firstName", is("Saulo")))
 				.andExpect(jsonPath("$.lastName", is("Alvarado Mateos")))
@@ -63,7 +63,7 @@ public class CustomerControllerTest {
 		customers.add(customer);
 		
 		given(customerRepo.findAll()).willReturn(customers);
-		mvc.perform(get("/customers").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+		mvc.perform(get("/customers").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
 				.andExpect(jsonPath("$[0].id", is(1)))
 				.andExpect(jsonPath("$[0].firstName", is("Saulo")))
 				.andExpect(jsonPath("$[0].lastName", is("Alvarado Mateos")))
