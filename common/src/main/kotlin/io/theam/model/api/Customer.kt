@@ -7,14 +7,18 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.node.TextNode
 
-/**
+/*
  * Basic data
  */
 data class CustomerData(val firstName:String, val lastName:String, val ndi:String)
 data class ImageData(val fileName: String, val fileData: String)
 
-/**
+/*
  * Response data
+ */
+
+/**
+ * Information about the image of the customer
  */
 @JsonSerialize(using = CustomerResponseImageDataSerializer::class)
 @JsonDeserialize(using = CustomerResponseImageDataDeserializer::class)
@@ -24,11 +28,18 @@ sealed class CustomerResponseImageData {
     data class Image(val imageData: ImageData): CustomerResponseImageData()
 }
 
+/**
+ * Customer API response
+ */
 data class CustomerResponse(
         val customerId: Long,
         val customer: CustomerData,
         val image: CustomerResponseImageData)
 
+
+/*
+ * SERIALIZATION
+ */
 
 open class CustomerResponseImageDataSerializer : JsonSerializer<CustomerResponseImageData>() {
 

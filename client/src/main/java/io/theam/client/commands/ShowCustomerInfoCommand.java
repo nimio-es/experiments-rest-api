@@ -5,7 +5,13 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import io.theam.client.service.RestClient;
 import io.theam.model.api.CustomerResponse;
+import io.theam.model.api.CustomerResponseImageData;
+import io.theam.util.UtilBase64Image;
 import org.apache.commons.lang3.StringUtils;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 @Command(name = "show", description = "Shows the info of a customer")
 public class ShowCustomerInfoCommand extends BaseCommand {
@@ -22,8 +28,11 @@ public class ShowCustomerInfoCommand extends BaseCommand {
     @Option(name = "--ndi", description = "Customer last name to search")
     public String ndi;
 
-    @Option(name = "--include-image-info", description = "Include in the info the image")
-    public boolean includeImageInfo = false;
+    @Option(name = "--image-file", description = "Include in the info the image and save in the path")
+    public String imagePath;
+
+    @Option(name = "--show", description = "Opens default application to show the image")
+    public boolean showImage = false;
 
     @Override
     protected boolean validate() {
@@ -40,7 +49,7 @@ public class ShowCustomerInfoCommand extends BaseCommand {
 
         final RestClient restClient = new RestClient(username, password);
         final CustomerResponse customer = customerId > 0
-                ? restClient.getCustomer(customerId, includeImageInfo)
+                ? restClient.getCustomer(customerId, !StringUtils.isEmpty(imagePath))
                 : !StringUtils.isEmpty(firstName)
                     ? restClient.lookupCustomerFirstName(firstName)
                     : !StringUtils.isEmpty(lastName)
@@ -49,6 +58,20 @@ public class ShowCustomerInfoCommand extends BaseCommand {
 
         try {
             System.out.println(pretty_print_json.writeValueAsString(customer));
+
+            if(customer.getImage() instanceof CustomerResponseImageData.Image) {
+                final CustomerResponseImageData.Image imageData = ((CustomerResponseImageData.Image)customer.getImage());
+                UtilBase64Image.INSTANCE.decoder(imageData.getImageData().getFileData(), imagePath);
+
+                if(showImage) {
+                    try {
+                        Desktop.getDesktop().open(new File(imagePath));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
         } catch (JsonProcessingException e) {
             new RuntimeException(e);
         }

@@ -1,6 +1,5 @@
 package io.theam.client.commands;
 
-import com.github.rvesse.airline.annotations.Arguments;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import io.theam.client.service.RestClient;
@@ -18,7 +17,7 @@ public class GetCustomerImageCommand extends BaseCommandWithId {
     @Option(name = "--show", description = "Opens default application to show the image")
     public boolean showImage = false;
 
-    @Arguments(title = "file", description = "The path to store the downloaded image")
+    @Option(name = {"--file", "-f"}, description = "The path to store the downloaded image")
     public String imagePath;
 
     @Override
@@ -36,7 +35,7 @@ public class GetCustomerImageCommand extends BaseCommandWithId {
                 try {
                     Desktop.getDesktop().open(new File(imagePath));
                 } catch (IOException e) {
-                    new RuntimeException(e);
+                    throw new RuntimeException(e);
                 }
             }
         }
