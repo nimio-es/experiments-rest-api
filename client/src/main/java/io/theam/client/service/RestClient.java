@@ -53,8 +53,8 @@ public final class RestClient {
         return customers.getBody();
     }
 
-    public CustomerResponse getCustomer(final long customerId) {
-        final String getUrl = String.format(base_customers_url + "/%d", customerId);
+    public CustomerResponse getCustomer(final long customerId, final boolean includeImage) {
+        final String getUrl = String.format(base_customers_url + "/%d?includeImage=%s", customerId, Boolean.toString(includeImage).toLowerCase());
         ResponseEntity<CustomerResponse> customer = restTemplate.getForEntity(getUrl, CustomerResponse.class);
         return customer.getBody();
     }
@@ -94,7 +94,7 @@ public final class RestClient {
         final String postUrl = String.format(base_customers_image_url, customerId);
         final File fileImage = new File(filePath);
         final String name = fileImage.getName();
-        final String data = UtilBase64Image.encoder(filePath);
+        final String data = UtilBase64Image.INSTANCE.encoder(filePath);
 
         final ImageData image = new ImageData(name, data);
 

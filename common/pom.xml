@@ -45,6 +45,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+            <version>2.9.4</version>
         </dependency>
 
         <dependency>
@@ -74,7 +75,6 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>${project.basedir}/src/main/java</source>
                                 <source>${project.basedir}/src/main/kotlin</source>
                             </sourceDirs>
                         </configuration>
@@ -88,7 +88,6 @@
                         <configuration>
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>

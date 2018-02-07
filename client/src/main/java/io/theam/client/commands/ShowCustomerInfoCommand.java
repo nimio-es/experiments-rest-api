@@ -22,6 +22,8 @@ public class ShowCustomerInfoCommand extends BaseCommand {
     @Option(name = "--ndi", description = "Customer last name to search")
     public String ndi;
 
+    @Option(name = "--include-image-info", description = "Include in the info the image")
+    public boolean includeImageInfo = false;
 
     @Override
     protected boolean validate() {
@@ -38,7 +40,7 @@ public class ShowCustomerInfoCommand extends BaseCommand {
 
         final RestClient restClient = new RestClient(username, password);
         final CustomerResponse customer = customerId > 0
-                ? restClient.getCustomer(customerId)
+                ? restClient.getCustomer(customerId, includeImageInfo)
                 : !StringUtils.isEmpty(firstName)
                     ? restClient.lookupCustomerFirstName(firstName)
                     : !StringUtils.isEmpty(lastName)

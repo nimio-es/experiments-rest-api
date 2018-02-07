@@ -90,7 +90,7 @@ public class StepsDefinitions {
 
     @Then("^the system responds correctly$")
     public void the_system_responds_correctly() {
-        assertThat(lastResponse.getStatusCode().value(), is(201));
+        assertThat(lastResponse.getStatusCode().value(), is(200));
     }
 
     @Then("^the client receives correct customer number (\\d+) information$")

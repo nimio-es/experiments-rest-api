@@ -5,8 +5,10 @@ import io.theam.model.Image;
 import io.theam.model.api.CustomerData;
 import io.theam.model.api.CustomerResponse;
 import io.theam.model.api.ImageData;
+import io.theam.model.api.CustomerResponseImageData;
 import io.theam.repository.CustomerRepository;
 import io.theam.repository.ImageRepository;
+import kotlin.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,11 +38,23 @@ public class CustomerController {
      * CUSTOMERS
      *****/
 
-    private static CustomerResponse from(final Customer customer) {
+    private static CustomerResponse from(final Customer customer, final Image image) {
+        return from(customer, image, true);
+    }
+
+    private static CustomerResponse from(final Customer customer, final Image image, final boolean onlyInfo) {
+
+        final CustomerResponseImageData imageData = image != null
+                ? (onlyInfo
+                    ? CustomerResponseImageData.HasImage.INSTANCE
+                    : new CustomerResponseImageData.Image(new ImageData(image.getFileName(), image.getFileData())))
+                : CustomerResponseImageData.NoImage.INSTANCE;
+
         return
                 new CustomerResponse(
                         customer.getId(),
-                        new CustomerData(customer.getFirstName(), customer.getLastName(), customer.getNdi())
+                        new CustomerData(customer.getFirstName(), customer.getLastName(), customer.getNdi()),
+                        imageData
                 );
     }
 
@@ -49,16 +62,24 @@ public class CustomerController {
 	public ResponseEntity<Collection<CustomerResponse>> getCustomerList() {
 		return new ResponseEntity<>(
 		        customerRepo.findAll().stream()
-                        .map(CustomerController::from)
+                        // .map(c -> new Pair(c, imageRepository.findByCustomerId(c.getId())))
+                        .map(c -> from(c, imageRepository.findByCustomerId(c.getId())))
                         .collect(Collectors.toList()),
                 HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<CustomerResponse> getPerson(@PathVariable long id) {
+	public ResponseEntity<CustomerResponse> getPerson(
+	        @PathVariable long id,
+            @RequestParam(name = "includeImage", required = false, defaultValue = "false") boolean includeImage) {
+
+        // the image includes the client
+        final Image image = imageRepository.findByCustomerId(id);
+        if(image != null) return new ResponseEntity<>(from(image.getCustomer(), image, !includeImage), HttpStatus.OK);
+
         return Optional
                 .ofNullable(customerRepo.findOne(id))
-                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .map(c -> new ResponseEntity<>(from(c, null), HttpStatus.OK))
                 .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
 	}
 
@@ -66,7 +87,7 @@ public class CustomerController {
 	public ResponseEntity<CustomerResponse> lookupPersonFirstName(@PathVariable String firstName) {
         return Optional
                 .ofNullable(customerRepo.findByFirstName(firstName))
-                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .map(c -> new ResponseEntity<>(from(c, imageRepository.findByCustomerId(c.getId())), HttpStatus.OK))
                 .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
@@ -74,7 +95,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> lookupPersonLastName(@PathVariable String lastName) {
         return Optional
                 .ofNullable(customerRepo.findByLastName(lastName))
-                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .map(c -> new ResponseEntity<>(from(c, imageRepository.findByCustomerId(c.getId())), HttpStatus.OK))
                 .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
@@ -82,7 +103,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> lookupPersonNdi(@PathVariable String ndi) {
         return Optional
                 .ofNullable(customerRepo.findByNdi(ndi))
-                .map(c -> new ResponseEntity<>(from(c), HttpStatus.CREATED))
+                .map(c -> new ResponseEntity<>(from(c, imageRepository.findByCustomerId(c.getId())), HttpStatus.OK))
                 .orElse(new ResponseEntity<>((CustomerResponse)null, HttpStatus.NOT_FOUND));
     }
 
@@ -96,7 +117,7 @@ public class CustomerController {
 
         final Customer saved = customerRepo.save(customerToSave);
 
-		return new ResponseEntity<>(from(saved), saved != null ? HttpStatus.CREATED: HttpStatus.INSUFFICIENT_STORAGE);
+		return new ResponseEntity<>(from(saved, null), saved != null ? HttpStatus.CREATED: HttpStatus.INSUFFICIENT_STORAGE);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
