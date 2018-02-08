@@ -24,7 +24,7 @@ data class ImageData(val fileName: String, val fileData: String)
 @JsonDeserialize(using = CustomerResponseImageDataDeserializer::class)
 sealed class CustomerResponseImageData {
     object NoImage: CustomerResponseImageData()
-    object HasImage: CustomerResponseImageData()
+    data class HasImage(val imageId: Long): CustomerResponseImageData()
     data class Image(val imageData: ImageData): CustomerResponseImageData()
 }
 
@@ -47,7 +47,12 @@ open class CustomerResponseImageDataSerializer : JsonSerializer<CustomerResponse
 
         when(value!!) {
             is CustomerResponseImageData.NoImage -> jgen?.writeString("without_image")
-            is CustomerResponseImageData.HasImage -> jgen?.writeString("has_image")
+            is CustomerResponseImageData.HasImage -> {
+                val v = value as CustomerResponseImageData.HasImage
+                jgen?.writeStartObject()
+                jgen?.writeNumberField("imageId", v.imageId)
+                jgen?.writeEndObject()
+            }
             is CustomerResponseImageData.Image -> {
                 val v = value as CustomerResponseImageData.Image
                 jgen?.writeObject(v.imageData)
@@ -61,11 +66,10 @@ open class CustomerResponseImageDataDeserializer : JsonDeserializer<CustomerResp
         val node = parser!!.codec!!.readTree<JsonNode>(parser)
 
         return when(node) {
-            is TextNode -> when(node.asText()) {
-                "without_image" -> CustomerResponseImageData.NoImage
-                else -> CustomerResponseImageData.HasImage
-            }
-            else -> CustomerResponseImageData.Image(ImageData(node.get("fileName").asText(), node.get("fileData").asText()))
+            is TextNode -> CustomerResponseImageData.NoImage
+            else ->
+                if (node.hasNonNull("imageId")) CustomerResponseImageData.HasImage(node.get("imageId").asLong())
+                else CustomerResponseImageData.Image(ImageData(node.get("fileName").asText(), node.get("fileData").asText()))
         }
     }
 }

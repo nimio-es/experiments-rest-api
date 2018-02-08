@@ -46,7 +46,7 @@ public class CustomerController {
 
         final CustomerResponseImageData imageData = image != null
                 ? (onlyInfo
-                    ? CustomerResponseImageData.HasImage.INSTANCE
+                    ? new CustomerResponseImageData.HasImage(image.getId())
                     : new CustomerResponseImageData.Image(new ImageData(image.getFileName(), image.getFileData())))
                 : CustomerResponseImageData.NoImage.INSTANCE;
 
