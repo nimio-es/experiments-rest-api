@@ -1,5 +1,7 @@
 package io.theam.model.api
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.*
@@ -35,6 +37,12 @@ data class CustomerResponse(
         val customerId: Long,
         val customer: CustomerData,
         val image: CustomerResponseImageData)
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
+sealed class ImageResponse {
+    data class OnlyImage(val imageData: ImageData): ImageResponse()
+    data class ImageWithCustomer(val imageData: ImageData, val customer: CustomerData) : ImageResponse()
+}
 
 
 /*

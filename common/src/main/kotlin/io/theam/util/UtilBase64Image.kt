@@ -13,11 +13,9 @@ object UtilBase64Image {
         try {
             FileInputStream(file).use { imageInFile ->
                 // Reading a Image file from file system
-                var base64Image = ""
                 val imageData = ByteArray(file.length().toInt())
                 imageInFile.read(imageData)
-                base64Image = Base64.getEncoder().encodeToString(imageData)
-                return base64Image
+                return Base64.getEncoder().encodeToString(imageData)
             }
         } catch (e: FileNotFoundException) {
             println("Image not found" + e)

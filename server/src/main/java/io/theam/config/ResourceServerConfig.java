@@ -20,10 +20,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .anonymous().disable()
-                .requestMatchers().antMatchers("/customers/**")
+                .requestMatchers().antMatchers("/customers/**").antMatchers("/images/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/customers/**").access("hasRole('ADMIN')")
-                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+                .antMatchers("/images/**").access("hasRole('ADMIN')")
+                .and()
+                .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }
 }

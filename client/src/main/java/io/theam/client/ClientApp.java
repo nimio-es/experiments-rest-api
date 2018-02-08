@@ -24,7 +24,14 @@ public class ClientApp {
                 .withDefaultCommand(CustomerListCommand.class)
                 .withSubGroup("image")
                 .withCommand(SetCustomerImageCommand.class)
-                .withDefaultCommand(GetCustomerImageCommand.class);
+                .withDefaultCommand(GetCustomerImageCommand.class)
+                .build();
+
+        builder.withGroup("images")
+                .withDescription("Operations with images")
+                .withCommand(GetImageCommand.class)
+                .withDefaultCommand(GetImageListCommand.class)
+                .build();
 
         Cli<Runnable> client = builder.build();
 

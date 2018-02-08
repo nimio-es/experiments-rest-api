@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
 import io.theam.model.api.CustomerData;
 import io.theam.model.api.CustomerResponse;
 import io.theam.model.api.ImageData;
+import io.theam.model.api.ImageResponse;
 import io.theam.util.UtilBase64Image;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -20,6 +21,7 @@ public final class RestClient {
     private static final String base_url =  "http://localhost:8080";
     private static final String base_customers_url = base_url + "/customers";
     private static final String base_customers_image_url = base_customers_url + "/%d/image";
+    private static final String base_images_url = base_url + "/images";
 
     final OAuth2RestTemplate restTemplate;
 
@@ -105,6 +107,18 @@ public final class RestClient {
     public ImageData getCustomerImage(final long customerId) {
         final String getUrl = String.format(base_customers_image_url, customerId);
         return restTemplate.getForEntity(getUrl, ImageData.class).getBody();
+    }
+
+    // -------
+
+    public Collection<ImageResponse> getAllImages() {
+        final String getUrl = base_images_url;
+        return restTemplate.getForEntity(getUrl, (Class<Collection<ImageResponse>>)(Class) Collection.class).getBody();
+    }
+
+    public ImageResponse getImage(final long imageId) {
+        final String getUrl = String.format(base_images_url + "/%d", imageId);
+        return restTemplate.getForEntity(getUrl, ImageResponse.class).getBody();
     }
 
 }
