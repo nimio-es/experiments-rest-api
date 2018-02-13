@@ -1,6 +1,5 @@
 package io.theam.model.api
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.databind.node.TextNode
  */
 data class CustomerData(val firstName:String, val lastName:String, val ndi:String)
 data class ImageData(val fileName: String, val fileData: String)
+data class UserData(val userName: String, val authorities: List<String>)
 
 /*
  * Response data

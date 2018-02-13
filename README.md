@@ -186,14 +186,14 @@ export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
 
 #### Different roles
 
-In this example you can use two different users with distinct roles. 
+In this example you can use two different userData with distinct roles. 
 
 - `noelia.capaz` with ADMIN role
 - `pepito.currito` without ADMIN role (only USER role)
 
-Both users has `password` as password. Isn't easy?
+Both userData has `password` as password. Isn't easy?
 
-You can use `pepito.currito`to prove that only users with administrative permissions can access the API methods.
+You can use `pepito.currito`to prove that only userData with administrative permissions can access the API methods.
 
 #### Examples
 

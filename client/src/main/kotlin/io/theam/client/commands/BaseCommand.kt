@@ -4,21 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.rvesse.airline.annotations.Option
 import org.apache.commons.lang3.StringUtils
+import java.util.*
 
 abstract class BaseCommand : Runnable {
 
     companion object {
         @JvmStatic
-        protected val pretty_print_json : ObjectMapper = ObjectMapper()
+        var pretty_print_json : ObjectMapper = ObjectMapper()
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                 .configure(SerializationFeature.INDENT_OUTPUT, true)
     }
 
-    @Option(name = ["--username", "-u"], description = "Define the user to access")
-    var username: String = System.getenv("THEAM_USERNAME")
+    @Option(name = ["--username", "-u"], description = "Define the user name to access")
+    var username: String = Optional.ofNullable(System.getenv("THEAM_USERNAME")).orElse("")
 
-    @Option(name = ["--password", "-p"], description = "Define the user to access")
-    var password: String = System.getenv("THEAM_PASSWORD")
+    @Option(name = ["--password", "-p"], description = "Define the user password to access")
+    var password: String = Optional.ofNullable(System.getenv("THEAM_PASSWORD")).orElse("")
 
     protected open fun validate(): Boolean {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {

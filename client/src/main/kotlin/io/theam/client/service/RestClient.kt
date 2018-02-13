@@ -1,22 +1,15 @@
 package io.theam.client.service
 
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.theam.model.api.CustomerData
 import io.theam.model.api.CustomerResponse
 import io.theam.model.api.ImageData
 import io.theam.model.api.ImageResponse
 import io.theam.util.UtilBase64Image
-import org.springframework.http.converter.HttpMessageConverter
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext
-import org.springframework.security.oauth2.client.OAuth2RestTemplate
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails
 import java.io.File
-import java.util.*
 
-class RestClient(username: String, password: String) {
+class RestClient(username: String, password: String) : BaseRestClient(username, password) {
 
-    private val restTemplate: OAuth2RestTemplate
+    // ----
 
     val customers: Collection<CustomerResponse>
         get() {
@@ -28,33 +21,6 @@ class RestClient(username: String, password: String) {
 
             return customers.body
         }
-
-    // -------
-
-    val allImages: Collection<ImageResponse>
-        get() {
-            val getUrl = base_images_url
-            return restTemplate.getForEntity(getUrl, Collection::class.java as Class<Collection<ImageResponse>>).body
-        }
-
-    init {
-
-        val resourceDetails = ResourceOwnerPasswordResourceDetails()
-        resourceDetails.username = username
-        resourceDetails.password = password
-        resourceDetails.accessTokenUri = base_url + "/oauth/token"
-        resourceDetails.clientId = "theam"
-        resourceDetails.clientSecret = "secret"
-        resourceDetails.grantType = "password"
-        resourceDetails.scope = Arrays.asList("read", "write")
-
-        val clientContext = DefaultOAuth2ClientContext()
-
-        this.restTemplate = OAuth2RestTemplate(resourceDetails, clientContext)
-        val mpcv = MappingJackson2HttpMessageConverter()
-        mpcv.objectMapper.registerKotlinModule()
-        restTemplate.messageConverters = Arrays.asList<HttpMessageConverter<*>>(mpcv)
-    }
 
     fun getCustomer(customerId: Long, includeImage: Boolean): CustomerResponse {
         val getUrl = String.format(base_customers_url + "/%d?includeImage=%s", customerId, java.lang.Boolean.toString(includeImage).toLowerCase())
@@ -93,6 +59,12 @@ class RestClient(username: String, password: String) {
 
     // -------
 
+    val allImages: Collection<ImageResponse>
+        get() {
+            val getUrl = base_images_url
+            return restTemplate.getForEntity(getUrl, Collection::class.java as Class<Collection<ImageResponse>>).body
+        }
+
     fun setCustomerImage(customerId: Long, filePath: String): Boolean {
         val postUrl = String.format(base_customers_image_url, customerId)
         val fileImage = File(filePath)
@@ -117,10 +89,11 @@ class RestClient(username: String, password: String) {
 
     companion object {
 
-        private val base_url = "http://localhost:8080"
-        private val base_customers_url = base_url + "/customers"
-        private val base_customers_image_url = base_customers_url + "/%d/image"
-        private val base_images_url = base_url + "/images"
+        private const val base_url = "http://localhost:8080"
+        private const val base_customers_url = base_url + "/customers"
+        private const val base_customers_image_url = base_customers_url + "/%d/image"
+        private const val base_images_url = base_url + "/images"
+        private const val base_users_url = base_url + "/users"
     }
 
 }

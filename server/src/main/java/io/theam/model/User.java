@@ -32,6 +32,15 @@ public class User implements UserDetails {
 	@Column(name = "roles", nullable = false)
 	private String roles;
 
+	public User() {}
+
+	public User(final String username, final String password, final String roles) {
+		this.username = username;
+		this.password = password;
+		this.roles = roles;
+		this.enabled = true;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -75,4 +84,15 @@ public class User implements UserDetails {
 		return username;
 	}
 
+	// ---
+
+	public boolean isAdminUser() {
+		return this.roles != null
+				&& Arrays.asList(
+						this.roles
+								.trim()
+								.toLowerCase()
+								.split(","))
+				.contains("admin");
+	}
 }

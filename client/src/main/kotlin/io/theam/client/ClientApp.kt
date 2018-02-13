@@ -3,6 +3,8 @@ package io.theam.client
 import com.github.rvesse.airline.Cli
 import com.github.rvesse.airline.help.Help
 import io.theam.client.commands.*
+import io.theam.client.commands.users.CreateUserCommand
+import io.theam.client.commands.users.UserListCommand
 
 object ClientApp {
 
@@ -12,6 +14,12 @@ object ClientApp {
         val builder = Cli.builder<Runnable>("theam-cli")
                 .withDescription("Theam example operations")
                 .withDefaultCommand(Help::class.java)
+
+        builder.withGroup("users")
+                .withDescription("Operations to manage users")
+                .withCommand(CreateUserCommand::class.java)
+                .withDefaultCommand(UserListCommand::class.java)
+                .build()
 
         builder.withGroup("customers")
                 .withDescription("Operations with customers")
