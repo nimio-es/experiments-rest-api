@@ -3,7 +3,6 @@ package io.theam.service;
 import io.theam.model.User;
 import io.theam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +18,10 @@ import java.util.stream.Stream;
 public class UserService implements UserDetailsService {
 
 	private static final User ADMIN_OWNER_ROLE =
-			new User("admin", "$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri", "OWNER");
+			new User(
+					"owner",
+					"$2a$10$D4OLKI6yy68crm.3imC9X.P2xqKHs5TloWUcr6z5XdOqnTrAK84ri",
+					"OWNER");
 
 	@Autowired
 	private UserRepository userRepository;
@@ -31,9 +33,9 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		// tests if it's is the admin. Admin is only in use when there aren't other users with admin role
-		if("admin".equalsIgnoreCase(username)) {
+		if("owner".equalsIgnoreCase(username)) {
 			final User adminUser = findAll().stream()
-					.filter(u -> "admin".equalsIgnoreCase(u.getUsername()))
+					.filter(u -> "owner".equalsIgnoreCase(u.getUsername()))
 					.findFirst()
 					.orElse(null);
 				return adminUser;

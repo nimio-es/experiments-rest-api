@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.TextNode
 data class CustomerData(val firstName:String, val lastName:String, val ndi:String)
 data class ImageData(val fileName: String, val fileData: String)
 data class UserData(val userName: String, val authorities: List<String>)
+data class ProductData(val ref: String, val name: String, val commonPrice: Double)
 
 /*
  * Response data
@@ -44,6 +45,7 @@ sealed class ImageResponse {
     data class ImageWithCustomer(val imageData: ImageData, val customer: CustomerData) : ImageResponse()
 }
 
+data class ProductResponse(val id: Long, val product: ProductData)
 
 /*
  * SERIALIZATION

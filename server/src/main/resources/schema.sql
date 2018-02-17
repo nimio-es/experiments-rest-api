@@ -23,7 +23,15 @@ CREATE TABLE images (
     file_data CLOB NOT NULL
 );
 
-DROP TABLE IF EXISTS skills;
+DROP TABLE IF EXISTS products;
+CREATE TABLE products (
+    product_id BIGINT PRIMARY KEY auto_increment,
+    ref VARCHAR(20) NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    common_price DOUBLE NOT NULL
+);
+
+DROP TABLE IF EXISTS purchases;
 CREATE TABLE purchases (
     purchase_id BIGINT PRIMARY KEY auto_increment,
     customer_id BIGINT REFERENCES customers (customer_id),

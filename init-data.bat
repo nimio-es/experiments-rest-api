@@ -3,7 +3,7 @@ SETLOCAL
 
 rem -- The first user have to be an admin
 echo Cretion of 'nieves' user (admin role)
-call tcli users create --new-username=nieves --new-password=guapa --as-admin --username=admin --password=password
+call tcli users create --new-username=nieves --new-password=guapa --as-admin --username=owner --password=password
 
 rem -- After creation of the first admin user, the admin original owner doesn't exist anymore
 rem -- It's necessary the use of a different admin user
@@ -35,6 +35,12 @@ call tcli customers list
 
 echo Show data and image of first customer
 call tcli customers image get --id 1 --file %TEMP%/downloaded_image_of_lourdes.jpg --show
+
+rem -- Create some products
+call tcli products create --reference "XAA0913" --name "Gominolas" --common-price 0.01
+call tcli products create --reference "PIASS12" --name "Lápices" --common-price 9.81
+call tcli products create --referemce "IOG123J" --name "Bolsos" --common-price 54.12
+call tcli products
 
 echo.
 echo.

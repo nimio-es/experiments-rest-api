@@ -1,8 +1,9 @@
-package io.theam.client.commands
+package io.theam.client.commands.customers
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
+import io.theam.client.commands.BaseCommand
 import io.theam.client.service.RestClient
 import io.theam.model.api.CustomerResponseImageData
 import io.theam.util.UtilBase64Image
@@ -54,7 +55,7 @@ class ShowCustomerInfoCommand : BaseCommand() {
             restClient.lookupCustomerNdi(ndi!!)
 
         try {
-            println(BaseCommand.pretty_print_json.writeValueAsString(customer))
+            println(pretty_print_json.writeValueAsString(customer))
 
             if (customer.image is CustomerResponseImageData.Image) {
                 val imageData = customer.image as CustomerResponseImageData.Image

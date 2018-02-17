@@ -1,8 +1,9 @@
-package io.theam.client.commands
+package io.theam.client.commands.customers
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
+import io.theam.client.commands.BaseCommand
 import io.theam.client.service.RestClient
 import io.theam.model.api.CustomerData
 import org.apache.commons.lang3.StringUtils
@@ -37,7 +38,7 @@ class AddCustomerCommand : BaseCommand() {
         val savedCustomer = RestClient(username, password).addCustomer(protoCustomer)
 
         try {
-            println(BaseCommand.pretty_print_json.writeValueAsString(savedCustomer))
+            println(pretty_print_json.writeValueAsString(savedCustomer))
         } catch (e: JsonProcessingException) {
             RuntimeException(e)
         }

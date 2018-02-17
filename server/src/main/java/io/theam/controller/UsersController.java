@@ -40,13 +40,14 @@ public class UsersController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<UserData>> getUserList() {
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<UserData> getUserList() {
         final Collection<UserData> users =
                 userService.findAll().stream()
                         .map(UsersController::toUserData)
                         .collect(Collectors.toList());
 
-        return new ResponseEntity(users, HttpStatus.OK);
+        return users;
     }
 
     @PostMapping()

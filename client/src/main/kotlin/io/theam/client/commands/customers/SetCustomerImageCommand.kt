@@ -1,7 +1,8 @@
-package io.theam.client.commands
+package io.theam.client.commands.customers
 
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
+import io.theam.client.commands.BaseCommandWithId
 import io.theam.client.service.RestClient
 import org.apache.commons.lang3.StringUtils
 

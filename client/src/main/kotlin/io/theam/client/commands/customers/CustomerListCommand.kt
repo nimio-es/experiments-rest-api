@@ -1,7 +1,8 @@
-package io.theam.client.commands
+package io.theam.client.commands.customers
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
+import io.theam.client.commands.BaseCommand
 import io.theam.client.service.RestClient
 import io.theam.model.api.CustomerResponse
 
@@ -14,7 +15,7 @@ class CustomerListCommand : BaseCommand() {
         customers = RestClient(username, password).customers
 
         try {
-            println(BaseCommand.pretty_print_json.writeValueAsString(customers))
+            println(pretty_print_json.writeValueAsString(customers))
         } catch (e: JsonProcessingException) {
             RuntimeException(e)
         }

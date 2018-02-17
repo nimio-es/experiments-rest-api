@@ -21,7 +21,7 @@ class UsersRestClient(username: String, password: String) : BaseRestClient(usern
         }
 
     fun createNewUser(username: String, password: String, isAdmin: Boolean) : UserData {
-        val getUrl = "$base_users_url?username=$username&password=$password" + (if(isAdmin) "&asAdmin=true" else "")
-        return restTemplate.postForObject(getUrl, null, UserData::class.java)
+        val postUrl = "$base_users_url?username=$username&password=$password" + (if(isAdmin) "&asAdmin=true" else "")
+        return restTemplate.postForObject(postUrl, null, UserData::class.java)
     }
 }

@@ -88,12 +88,9 @@ class RestClient(username: String, password: String) : BaseRestClient(username, 
     }
 
     companion object {
-
         private const val base_url = "http://localhost:8080"
         private const val base_customers_url = base_url + "/customers"
         private const val base_customers_image_url = base_customers_url + "/%d/image"
         private const val base_images_url = base_url + "/images"
-        private const val base_users_url = base_url + "/users"
     }
-
 }

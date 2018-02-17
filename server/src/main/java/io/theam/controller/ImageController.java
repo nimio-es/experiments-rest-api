@@ -21,8 +21,6 @@ import java.util.LinkedList;
 @RequestMapping("/images")
 public class ImageController {
 
-    private static Logger logger = LoggerFactory.getLogger(ImageController.class);
-
     @Autowired
     private ImageRepository imageRepository;
 

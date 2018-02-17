@@ -5,7 +5,7 @@ import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
 import io.theam.client.service.UsersRestClient
 
-@Command(name = "create", description = "Get the list of all users")
+@Command(name = "create", description = "Creates a new user")
 class CreateUserCommand : BaseCommand() {
 
     @Option(name = ["--new-username", "-nu"], description = "Define the user name to create")
@@ -33,7 +33,7 @@ class CreateUserCommand : BaseCommand() {
     }
 
     override fun doRun() {
-        System.out.println(pretty_print_json.writeValueAsString(
+        println(pretty_print_json.writeValueAsString(
                 UsersRestClient(username, password).createNewUser(newUsername, newPassword, isAdmin)
         ))
     }

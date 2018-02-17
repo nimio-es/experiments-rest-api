@@ -1,6 +1,7 @@
-package io.theam.client.commands
+package io.theam.client.commands.customers
 
 import com.github.rvesse.airline.annotations.Command
+import io.theam.client.commands.BaseCommandWithId
 import io.theam.client.service.RestClient
 
 @Command(name = "delete", description = "Delete a customer")
