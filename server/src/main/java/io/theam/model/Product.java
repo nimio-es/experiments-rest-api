@@ -55,4 +55,12 @@ public class Product {
     public void setCommonPrice(Double commonPrice) {
         this.commonPrice = commonPrice;
     }
+
+    public Product() {}
+
+    public Product(final String ref, final String name, final Double commonPrice) {
+        this.ref = ref;
+        this.name = name;
+        this.commonPrice = commonPrice;
+    }
 }

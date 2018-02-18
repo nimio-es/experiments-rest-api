@@ -6,8 +6,8 @@ import io.theam.model.api.CustomerData;
 import io.theam.model.api.CustomerResponse;
 import io.theam.model.api.CustomerResponseImageData;
 import io.theam.model.api.ImageData;
-import io.theam.repository.CustomerRepository;
-import io.theam.repository.ImageRepository;
+import io.theam.repository.CustomersRepository;
+import io.theam.repository.ImagesRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +28,10 @@ public class CustomerController {
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
-	private CustomerRepository customerRepo;
+	private CustomersRepository customerRepo;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImagesRepository imageRepository;
 
     /*****
      * CUSTOMERS

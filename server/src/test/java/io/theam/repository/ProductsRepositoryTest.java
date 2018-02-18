@@ -1,6 +1,5 @@
 package io.theam.repository;
 
-import io.theam.model.Customer;
 import io.theam.model.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class ProductsRepositoryTest {
 
     @Autowired
-    private ProductRepository customerRepository;
+    private ProductsRepository productsRepository;
 
     @Test
     public void repositorySavesProduct() {
@@ -24,7 +23,7 @@ public class ProductsRepositoryTest {
         product.setName("PLAYMOBIL");
         product.setCommonPrice(10.01);
 
-        Product result = customerRepository.save(product);
+        Product result = productsRepository.save(product);
 
         assertEquals(result.getRef(), "JUGUETO");
         assertEquals(result.getName(), "PLAYMOBIL");

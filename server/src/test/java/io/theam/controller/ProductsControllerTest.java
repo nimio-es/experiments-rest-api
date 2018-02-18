@@ -1,7 +1,7 @@
 package io.theam.controller;
 
 import io.theam.model.Product;
-import io.theam.repository.ProductRepository;
+import io.theam.repository.ProductsRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ public class ProductsControllerTest {
 	private MockMvc mvc;
 
 	@MockBean
-	private ProductRepository productsRepository;
+	private ProductsRepository productsRepository;
 
 	private Product product;
 	

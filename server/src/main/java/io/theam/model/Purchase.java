@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "purchases")
@@ -19,10 +20,19 @@ public class Purchase {
 	private Date date;
 
 	@ManyToOne
-	@JoinColumn (name="customerId")
+	@JoinColumn (name="customer_id")
 	private Customer customer;
 
-	private long amount;
+	@ManyToOne
+	@JoinColumn (name="product_id")
+	private Product product;
+
+	@Column(name = "num_items")
+	private int numOfItems;
+
+	@Column(name = "item_price")
+	private double priceOfItem;
+
 
 	public long getId() {
 		return id;
@@ -48,11 +58,15 @@ public class Purchase {
 		this.customer = customer;
 	}
 
-	public long getAmmount() {
-		return amount;
-	}
+	public Product getProduct() { return product; }
 
-	public void setAmmount(long ammount) {
-		this.amount = ammount;
-	}
+	public void setProduct(Product product) { this.product = product; }
+
+	public int getNumOfItems() { return numOfItems; }
+
+	public void setNumOfItems(int numOfItems) { this.numOfItems = numOfItems; }
+
+	public double getPriceOfItem() { return priceOfItem; }
+
+	public void setPriceOfItem(double priceOfItem) { this.priceOfItem = priceOfItem; }
 }

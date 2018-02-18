@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.RestClient
+import io.theam.client.service.CustomersRestClient
 import io.theam.model.api.CustomerResponseImageData
 import io.theam.util.UtilBase64Image
 import org.apache.commons.lang3.StringUtils
@@ -44,7 +44,7 @@ class ShowCustomerInfoCommand : BaseCommand() {
 
     override fun doRun() {
 
-        val restClient = RestClient(username, password)
+        val restClient = CustomersRestClient(username, password)
         val customer = if (customerId!! > 0)
             restClient.getCustomer(customerId!!, !StringUtils.isEmpty(imagePath))
         else if (!StringUtils.isEmpty(firstName))

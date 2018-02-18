@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface CustomerRepository extends CrudRepository<Customer, Long> {
+public interface CustomersRepository extends CrudRepository<Customer, Long> {
 	
 	Collection<Customer> findAll();
 	

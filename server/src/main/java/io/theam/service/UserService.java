@@ -1,7 +1,7 @@
 package io.theam.service;
 
 import io.theam.model.User;
-import io.theam.repository.UserRepository;
+import io.theam.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
 					"OWNER");
 
 	@Autowired
-	private UserRepository userRepository;
+	private UsersRepository userRepository;
 
 	@Autowired
     private PasswordEncoder passwordEncoder;

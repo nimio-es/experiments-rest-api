@@ -3,7 +3,7 @@ package io.theam.client.commands.products
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.ProductRestClient
+import io.theam.client.service.ProductsRestClient
 
 @Command(name = "create", description = "Creates a new product")
 class CreateProductCommand : BaseCommand() {
@@ -32,7 +32,7 @@ class CreateProductCommand : BaseCommand() {
 
     override fun doRun() {
         println(pretty_print_json.writeValueAsString(
-                ProductRestClient(username, password)
+                ProductsRestClient(username, password)
                         .saveProduct(ref, name, commonPrice)))
     }
 }

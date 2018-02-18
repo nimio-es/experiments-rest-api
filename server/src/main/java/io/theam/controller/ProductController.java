@@ -3,7 +3,7 @@ package io.theam.controller;
 import io.theam.model.Product;
 import io.theam.model.api.ProductData;
 import io.theam.model.api.ProductResponse;
-import io.theam.repository.ProductRepository;
+import io.theam.repository.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @RestController
@@ -19,7 +18,7 @@ import java.util.stream.StreamSupport;
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductsRepository productRepository;
 
     @RequestMapping
     public ResponseEntity<Collection<ProductResponse>> getAllProducts() {

@@ -3,7 +3,7 @@ package io.theam.client.service
 import io.theam.model.api.ProductData
 import io.theam.model.api.ProductResponse
 
-class ProductRestClient(username: String, password: String) : BaseRestClient(username, password)  {
+class ProductsRestClient(username: String, password: String) : BaseRestClient(username, password)  {
 
     companion object {
         private const val base_products_url = base_url + "/products"

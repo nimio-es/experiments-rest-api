@@ -3,7 +3,7 @@ package io.theam.client.commands.customers
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommandWithId
-import io.theam.client.service.RestClient
+import io.theam.client.service.CustomersRestClient
 import io.theam.util.UtilBase64Image
 import org.apache.commons.lang3.StringUtils
 import java.awt.Desktop
@@ -21,7 +21,7 @@ class GetCustomerImageCommand : BaseCommandWithId() {
 
     override fun doRun() {
 
-        val image = RestClient(username, password).getCustomerImage(customerId!!)
+        val image = CustomersRestClient(username, password).getCustomerImage(customerId!!)
 
         if (StringUtils.isEmpty(imagePath)) {
             println("Image downloaded but not stored locally (no image path defined)")

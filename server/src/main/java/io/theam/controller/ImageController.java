@@ -3,9 +3,7 @@ package io.theam.controller;
 import io.theam.model.Image;
 import io.theam.model.api.ImageData;
 import io.theam.model.api.ImageResponse;
-import io.theam.repository.ImageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.theam.repository.ImagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,7 @@ import java.util.LinkedList;
 public class ImageController {
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImagesRepository imageRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Collection<ImageResponse>> getAllImages() {

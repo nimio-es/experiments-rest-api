@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.RestClient
+import io.theam.client.service.CustomersRestClient
 import io.theam.model.api.CustomerData
 import org.apache.commons.lang3.StringUtils
 
@@ -35,7 +35,7 @@ class AddCustomerCommand : BaseCommand() {
 
         val protoCustomer = CustomerData(firstName!!, lastName!!, ndi!!)
 
-        val savedCustomer = RestClient(username, password).addCustomer(protoCustomer)
+        val savedCustomer = CustomersRestClient(username, password).addCustomer(protoCustomer)
 
         try {
             println(pretty_print_json.writeValueAsString(savedCustomer))

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.node.TextNode
+import java.util.*
 
 /*
  * Basic data
@@ -15,6 +16,7 @@ data class CustomerData(val firstName:String, val lastName:String, val ndi:Strin
 data class ImageData(val fileName: String, val fileData: String)
 data class UserData(val userName: String, val authorities: List<String>)
 data class ProductData(val ref: String, val name: String, val commonPrice: Double)
+data class PurchaseData(val date: Date, val customerId: Long, val productId: Long, val numItems: Int, val priceOfItem: Double)
 
 /*
  * Response data

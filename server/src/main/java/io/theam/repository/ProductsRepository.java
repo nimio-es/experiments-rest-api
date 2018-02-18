@@ -1,11 +1,10 @@
 package io.theam.repository;
 
-import io.theam.model.Image;
+import io.theam.model.Product;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ImageRepository extends CrudRepository<Image, Long> {
+public interface ProductsRepository extends CrudRepository<Product, Long> {
 
-    Image findByCustomerId(long id);
 }

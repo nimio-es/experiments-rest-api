@@ -4,9 +4,10 @@ import com.github.rvesse.airline.Cli
 import com.github.rvesse.airline.help.Help
 import io.theam.client.commands.customers.*
 import io.theam.client.commands.images.GetImageCommand
-import io.theam.client.commands.images.GetImageListCommand
+import io.theam.client.commands.images.ImageListCommand
 import io.theam.client.commands.products.CreateProductCommand
-import io.theam.client.commands.products.GetProductListCommand
+import io.theam.client.commands.products.ProductListCommand
+import io.theam.client.commands.purchases.PurchaseListCommand
 import io.theam.client.commands.users.CreateUserCommand
 import io.theam.client.commands.users.UserListCommand
 
@@ -39,13 +40,18 @@ object ClientApp {
         builder.withGroup("images")
                 .withDescription("Operations with images")
                 .withCommand(GetImageCommand::class.java)
-                .withDefaultCommand(GetImageListCommand::class.java)
+                .withDefaultCommand(ImageListCommand::class.java)
                 .build()
 
         builder.withGroup("products")
                 .withDescription("Operations with products")
                 .withCommand(CreateProductCommand::class.java)
-                .withDefaultCommand(GetProductListCommand::class.java)
+                .withDefaultCommand(ProductListCommand::class.java)
+                .build()
+
+        builder.withGroup("purchases")
+                .withDescription("Operations with purchases")
+                .withDefaultCommand(PurchaseListCommand::class.java)
                 .build()
 
         val client = builder.build()

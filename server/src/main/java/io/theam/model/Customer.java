@@ -9,7 +9,7 @@ public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "customerId")
+	@Column(name = "customer_id")
 	private long id;
 
 	@Column(name = "first_name")
@@ -53,6 +53,14 @@ public class Customer {
 	}
 
 	public void setNdi(String ndi) {
+		this.ndi = ndi;
+	}
+
+	public Customer() {}
+
+	public Customer(final String firstName, final String lastName, final String ndi) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.ndi = ndi;
 	}
 }

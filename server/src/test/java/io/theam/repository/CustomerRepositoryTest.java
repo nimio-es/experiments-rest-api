@@ -1,17 +1,11 @@
 package io.theam.repository;
 
 import io.theam.model.Customer;
-import io.theam.model.Purchase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 public class CustomerRepositoryTest {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomersRepository customerRepository;
 
     @Test
     public void repositorySavesPerson() {

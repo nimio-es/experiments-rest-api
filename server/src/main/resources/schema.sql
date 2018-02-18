@@ -35,6 +35,8 @@ DROP TABLE IF EXISTS purchases;
 CREATE TABLE purchases (
     purchase_id BIGINT PRIMARY KEY auto_increment,
     customer_id BIGINT REFERENCES customers (customer_id),
-    purchase_date TIMESTAMP,
-    amount BIGINT
+    product_id BIGINT REFERENCES products (product_id),
+    purchase_date TIMESTAMP NOT NULL,
+    num_items INTEGER NOT NULL,
+    item_price DOUBLE NOT NULL
 );

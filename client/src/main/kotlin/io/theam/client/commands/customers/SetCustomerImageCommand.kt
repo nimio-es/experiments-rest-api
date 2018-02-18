@@ -3,7 +3,7 @@ package io.theam.client.commands.customers
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommandWithId
-import io.theam.client.service.RestClient
+import io.theam.client.service.CustomersRestClient
 import org.apache.commons.lang3.StringUtils
 
 @Command(name = "set", description = "Sets the image of a customer")
@@ -23,6 +23,6 @@ class SetCustomerImageCommand : BaseCommandWithId() {
 
     override fun doRun() {
         println("Associate the image '" + imagePath + "' to customer with id: " + java.lang.Long.toString(customerId!!))
-        RestClient(username, password).setCustomerImage(customerId!!, imagePath!!)
+        CustomersRestClient(username, password).setCustomerImage(customerId!!, imagePath!!)
     }
 }

@@ -1,8 +1,8 @@
 package io.theam.controller;
 
 import io.theam.model.Customer;
-import io.theam.repository.CustomerRepository;
-import io.theam.repository.ImageRepository;
+import io.theam.repository.CustomersRepository;
+import io.theam.repository.ImagesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +30,10 @@ public class CustomerControllerTest {
 	private MockMvc mvc;
 
 	@MockBean
-	private CustomerRepository customerRepo;
+	private CustomersRepository customerRepo;
 
 	@MockBean
-	private ImageRepository imageRepository;
+	private ImagesRepository imageRepository;
 
 	private Customer customer;
 	
