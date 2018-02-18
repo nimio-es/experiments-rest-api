@@ -1,6 +1,7 @@
 package io.theam.client.service
 
 import io.theam.model.api.ProductData
+import io.theam.model.api.ProductResponse
 
 class ProductRestClient(username: String, password: String) : BaseRestClient(username, password)  {
 
@@ -19,9 +20,9 @@ class ProductRestClient(username: String, password: String) : BaseRestClient(use
             return products.body
         }
 
-    fun saveProduct(ref: String, name: String, price: Double) : ProductData =
-            restTemplate.postForObject(
+    fun saveProduct(ref: String, name: String, price: Double) : ProductResponse =
+            restTemplate.postForEntity(
                 base_products_url,
                 ProductData(ref, name, price),
-                ProductData::class.java)
+                ProductResponse::class.java).body
 }
