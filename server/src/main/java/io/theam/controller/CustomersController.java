@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customers")
-public class CustomerController {
+public class CustomersController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomersController.class);
 
     @Autowired
 	private CustomersRepository customerRepo;
@@ -68,7 +68,7 @@ public class CustomerController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<CustomerResponse> getPerson(
+	public ResponseEntity<CustomerResponse> getCustomer(
 	        @PathVariable long id,
             @RequestParam(name = "includeImage", required = false, defaultValue = "false") boolean includeImage) {
 

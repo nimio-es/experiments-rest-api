@@ -40,7 +40,18 @@ rem -- Create some products
 call tcli products create --reference "XAA0913" --name "Gominolas" --common-price 0.01
 call tcli products create --reference "PIASS12" --name "Lápices" --common-price 9.81
 call tcli products create --reference "IOG123J" --name "Bolsos" --common-price 54.12
+call tcli products create --reference "BALLS23" --name "Boliches" --common-price 0.19
 call tcli products
+
+rem -- Create some purchases
+call tcli purchases add --customer-id 1 --product-id 1 --num-of-items 20 --unit-price=0.008
+call tcli purchases add --customer-id 1 --product-id 3 --num-of-items 1 --unit-price=49.23
+call tcli purchases add --customer-id 1 --product-id 2 --num-of-items 3 --unit-price=10.21
+call tcli purchases add --customer-id 2 --product-id 1 --num-of-items 11 --unit-price=0.012
+call tcli purchases add --customer-id 2 --product-id 4 --num-of-items 2 --unit-price=0.15
+call tcli purchases add --customer-id 3 --product-id 2 --num-of-items 1 --unit-price=8.99
+call tcli purchases add --customer-id 3 --product-id 3 --num-of-items 1 --unit-price=60.00
+call tcli purchases add --customer-id 3 --product-id 4 --num-of-items 5 --unit-price=0.20
 
 echo.
 echo.

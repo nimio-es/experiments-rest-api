@@ -8,6 +8,7 @@ import io.theam.client.commands.images.ImageListCommand
 import io.theam.client.commands.products.CreateProductCommand
 import io.theam.client.commands.products.ProductListCommand
 import io.theam.client.commands.purchases.PurchaseListCommand
+import io.theam.client.commands.purchases.RegisterNewPurchaseCommand
 import io.theam.client.commands.users.CreateUserCommand
 import io.theam.client.commands.users.UserListCommand
 
@@ -51,6 +52,7 @@ object ClientApp {
 
         builder.withGroup("purchases")
                 .withDescription("Operations with purchases")
+                .withCommand(RegisterNewPurchaseCommand::class.java)
                 .withDefaultCommand(PurchaseListCommand::class.java)
                 .build()
 

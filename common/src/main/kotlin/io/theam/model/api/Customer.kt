@@ -1,5 +1,6 @@
 package io.theam.model.api
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
@@ -16,7 +17,7 @@ data class CustomerData(val firstName:String, val lastName:String, val ndi:Strin
 data class ImageData(val fileName: String, val fileData: String)
 data class UserData(val userName: String, val authorities: List<String>)
 data class ProductData(val ref: String, val name: String, val commonPrice: Double)
-data class PurchaseData(val date: Date, val customerId: Long, val productId: Long, val numItems: Int, val priceOfItem: Double)
+data class PurchaseData(@JsonFormat(pattern = "YYYY-MM-dd") val date: Date, val customerId: Long, val productId: Long, val numItems: Int, val priceOfItem: Double)
 
 /*
  * Response data

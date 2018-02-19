@@ -2,15 +2,15 @@ package io.theam.controller;
 
 import io.theam.model.Purchase;
 import io.theam.model.api.PurchaseData;
+import io.theam.repository.CustomersRepository;
+import io.theam.repository.ProductsRepository;
 import io.theam.repository.PurchasesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -19,10 +19,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/purchases")
-public class PurchaseController {
+public class PurchasesController {
 
     @Autowired
     private PurchasesRepository purchaseRepository;
+
+    @Autowired
+    private CustomersRepository customersRepository;
+
+    @Autowired
+    private ProductsRepository productsRepository;
 
 
     // has no sense allow a query of all purchases
@@ -41,7 +47,7 @@ public class PurchaseController {
 
     private static Collection<PurchaseData> readAndTransform(final Supplier<Collection<Purchase>> supplier) {
         return Optional.ofNullable(supplier.get())
-                .map(PurchaseController::transform)
+                .map(PurchasesController::transform)
                 .orElse(new ArrayList<>());
     }
 
@@ -65,4 +71,26 @@ public class PurchaseController {
             @PathVariable(name="customerId")Long productId) {
         return readAndAccpeted(() -> purchaseRepository.findByCustomerIdAndProductId(customerId, productId));
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<PurchaseData> registerPurchase(@RequestBody @Valid PurchaseData purchaseData) {
+        final Purchase purchase = new Purchase();
+        purchase.setDate(purchaseData.getDate());
+        purchase.setCustomer(customersRepository.findOne(purchaseData.getCustomerId()));
+        purchase.setProduct(productsRepository.findOne(purchaseData.getProductId()));
+        purchase.setNumOfItems(purchaseData.getNumItems());
+        purchase.setPriceOfItem(purchaseData.getPriceOfItem());
+
+        return Optional.ofNullable(purchaseRepository.save(purchase))
+                .map(p -> new ResponseEntity<>(
+                        new PurchaseData(
+                                p.getDate(),
+                                p.getCustomer().getId(),
+                                p.getProduct().getId(),
+                                p.getNumOfItems(),
+                                p.getPriceOfItem()),
+                        HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>((PurchaseData)null, HttpStatus.BAD_REQUEST));
+    }
+
 }

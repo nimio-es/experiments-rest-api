@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 @RestController
 @RequestMapping("/images")
-public class ImageController {
+public class ImagesController {
 
     @Autowired
     private ImagesRepository imageRepository;
