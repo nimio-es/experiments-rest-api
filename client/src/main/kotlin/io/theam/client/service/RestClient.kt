@@ -8,9 +8,9 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails
 import java.util.*
 
-abstract class BaseRestClient(username: String, password: String) {
+open class RestClient(val username: String, val password: String, val urlBase: String = "http://localhost:8080") {
 
-    internal val restTemplate: OAuth2RestTemplate
+    val restTemplate: OAuth2RestTemplate
 
     companion object {
         internal const val base_url = "http://localhost:8080"
@@ -36,6 +36,5 @@ abstract class BaseRestClient(username: String, password: String) {
         mpcv.objectMapper.registerKotlinModule()
         restTemplate.messageConverters = Arrays.asList<HttpMessageConverter<*>>(mpcv)
     }
-
 
 }

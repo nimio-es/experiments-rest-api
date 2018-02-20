@@ -3,6 +3,7 @@ package io.theam.client.commands
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.rvesse.airline.annotations.Option
+import io.theam.client.service.RestClient
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
@@ -31,6 +32,9 @@ abstract class BaseCommand : Runnable {
         return true
     }
 
+    /**
+     * Template method pattern
+     */
     protected abstract fun doRun()
 
     override fun run() {
@@ -38,4 +42,13 @@ abstract class BaseCommand : Runnable {
             doRun()
         }
     }
+
+    // ----
+
+    /**
+     * Util method that gets the username and password and creates a
+     * new RestClient utility and avoid that each command make the same call
+     */
+    protected fun restClient(): RestClient = RestClient(username, password)
+
 }

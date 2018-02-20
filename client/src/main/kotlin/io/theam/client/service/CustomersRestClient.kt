@@ -7,7 +7,7 @@ import io.theam.model.api.ImageResponse
 import io.theam.util.UtilBase64Image
 import java.io.File
 
-class CustomersRestClient(username: String, password: String) : BaseRestClient(username, password) {
+class CustomersRestClient(username: String, password: String) : RestClient(username, password) {
 
     // ----
 

@@ -2,7 +2,7 @@ package io.theam.client.service
 
 import io.theam.model.api.UserData
 
-class UsersRestClient(username: String, password: String) : BaseRestClient(username, password)  {
+class UsersRestClient(username: String, password: String) : RestClient(username, password)  {
 
     companion object {
         private const val base_users_url = base_url + "/users"

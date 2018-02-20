@@ -3,7 +3,7 @@ package io.theam.client.service
 import io.theam.model.api.PurchaseData
 import java.util.*
 
-class PurchasesRestClient(username: String, password: String) : BaseRestClient(username, password)  {
+class PurchasesRestClient(username: String, password: String) : RestClient(username, password)  {
 
     companion object {
         private const val base_purchases_url = base_url + "/purchases"
