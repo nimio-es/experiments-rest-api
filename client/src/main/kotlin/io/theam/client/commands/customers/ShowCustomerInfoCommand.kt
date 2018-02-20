@@ -1,12 +1,15 @@
 package io.theam.client.commands.customers
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.CustomersRestClient
+import io.theam.client.commands.printWith
+import io.theam.client.service.bodyOf
+import io.theam.client.service.getEntity
+import io.theam.client.service.withUrl
+import io.theam.model.api.CustomerResponse
 import io.theam.model.api.CustomerResponseImageData
-import io.theam.util.UtilBase64Image
+import io.theam.util.decodeToFile
 import org.apache.commons.lang3.StringUtils
 import java.awt.Desktop
 import java.io.File
@@ -16,7 +19,7 @@ import java.io.IOException
 class ShowCustomerInfoCommand : BaseCommand() {
 
     @Option(name = ["--id"], description = "Customer identity to search")
-    var customerId: Long? = -1L
+    var customerId: Long? = null
 
     @Option(name = ["--first-name", "-fn"], description = "Customer first name to search")
     var firstName: String? = null
@@ -42,38 +45,49 @@ class ShowCustomerInfoCommand : BaseCommand() {
         return result
     }
 
-    override fun doRun() {
+    private val baseUrl get() = "$host/customers"
 
-        val restClient = CustomersRestClient(username, password)
-        val customer = if (customerId!! > 0)
-            restClient.getCustomer(customerId!!, !StringUtils.isEmpty(imagePath))
-        else if (!StringUtils.isEmpty(firstName))
-            restClient.lookupCustomerFirstName(firstName!!)
-        else if (!StringUtils.isEmpty(lastName))
-            restClient.lookupCustomerLastName(lastName!!)
-        else
-            restClient.lookupCustomerNdi(ndi!!)
+    private fun getCustomer() =
+            bodyOf(restClient withUrl
+                    "$baseUrl/${customerId!!}?includeImage=$showImage" getEntity
+                    CustomerResponse::class.java)
 
-        try {
-            println(pretty_print_json.writeValueAsString(customer))
+    private fun lookupCustomerFirstName(): CustomerResponse =
+            bodyOf(restClient withUrl
+                    "$baseUrl/firstName/${firstName!!}" getEntity
+                    CustomerResponse::class.java)
 
-            if (customer.image is CustomerResponseImageData.Image) {
-                val imageData = customer.image as CustomerResponseImageData.Image
-                UtilBase64Image.decoder(imageData.imageData.fileData, imagePath!!)
+    private fun lookupCustomerLastName(): CustomerResponse =
+            bodyOf(restClient withUrl
+                    "$baseUrl/lastName/$lastName" getEntity
+                    CustomerResponse::class.java)
 
-                if (showImage) {
-                    try {
-                        Desktop.getDesktop().open(File(imagePath!!))
-                    } catch (e: IOException) {
-                        throw RuntimeException(e)
+    private fun lookupCustomerNdi(): CustomerResponse =
+            bodyOf(restClient withUrl
+                    "$baseUrl/ndi/$ndi" getEntity
+                    CustomerResponse::class.java)
+
+    override fun doRun() =
+            when {
+                customerId != null -> getCustomer()
+                (firstName ?: "").isNotBlank() -> lookupCustomerFirstName()
+                (lastName ?: "").isNotBlank() -> lookupCustomerLastName()
+                else -> lookupCustomerNdi()
+            }.let { customer ->
+                customer printWith pretty_print_json
+
+                if (customer.image is CustomerResponseImageData.Image) {
+                    val imageData = customer.image as CustomerResponseImageData.Image
+                    imageData.imageData.fileData decodeToFile imagePath!!
+
+                    if (showImage) {
+                        try {
+                            Desktop.getDesktop().open(File(imagePath!!))
+                        } catch (e: IOException) {
+                            throw RuntimeException(e)
+                        }
+
                     }
-
                 }
             }
-
-        } catch (e: JsonProcessingException) {
-            RuntimeException(e)
-        }
-
-    }
 }

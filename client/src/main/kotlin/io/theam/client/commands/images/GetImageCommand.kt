@@ -3,10 +3,11 @@ package io.theam.client.commands.images
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.CustomersRestClient
+import io.theam.client.service.bodyOf
+import io.theam.client.service.getEntity
+import io.theam.client.service.withUrl
 import io.theam.model.api.ImageResponse
-import io.theam.util.UtilBase64Image
-import org.apache.commons.lang3.StringUtils
+import io.theam.util.decodeToFile
 import java.awt.Desktop
 import java.io.File
 import java.io.IOException
@@ -32,18 +33,21 @@ class GetImageCommand : BaseCommand() {
         return result
     }
 
-    override fun doRun() {
-        val image = CustomersRestClient(username, password).getImage(imageId!!)
+    private fun getImage(): ImageResponse =
+            bodyOf(restClient withUrl
+                    "$host/images/$imageId!!" getEntity
+                    ImageResponse::class.java)
 
-        if (StringUtils.isEmpty(imagePath)) {
+    override fun doRun() = getImage().let {
+        image ->
+        if((imagePath ?: "").isBlank()) {
             println("Image downloaded but not stored locally (no image path defined)")
             println(image.toString())
         } else {
-
             val imageData = (image as? ImageResponse.OnlyImage)?.imageData
                     ?: (image as ImageResponse.ImageWithCustomer).imageData
 
-            UtilBase64Image.decoder(imageData.fileData, imagePath!!)
+            imageData.fileData decodeToFile imagePath!!
 
             if (showImage) {
                 try {

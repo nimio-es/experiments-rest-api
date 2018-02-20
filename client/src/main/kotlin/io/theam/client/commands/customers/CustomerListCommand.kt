@@ -1,26 +1,25 @@
 package io.theam.client.commands.customers
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.github.rvesse.airline.annotations.Command
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.CustomersRestClient
+import io.theam.client.service.bodyOf
+import io.theam.client.service.getEntity
+import io.theam.client.service.withUrl
 import io.theam.model.api.CustomerResponse
+import org.springframework.core.ParameterizedTypeReference
 
 @Command(name = "list", description = "Get the list of all customers")
 class CustomerListCommand : BaseCommand() {
 
-    public override fun doRun() {
+    private val customers: Collection<CustomerResponse>
+        get() = bodyOf( restClient withUrl
+                "$host/customers" getEntity
+                    object : ParameterizedTypeReference<Collection<CustomerResponse>>() {})
 
-        var customers: Collection<CustomerResponse>? = null
-        customers = CustomersRestClient(username, password).customers
-
-        try {
-            println(pretty_print_json.writeValueAsString(customers))
-        } catch (e: JsonProcessingException) {
-            RuntimeException(e)
-        }
-
-        println("---------")
-        println("Number of customers: " + Integer.toString(customers.size))
-    }
+    public override fun doRun() =
+            customers.let { listOf(
+                    pretty_print_json.writeValueAsString(it),
+                    "------------",
+                    "Number of customers: ${it.size}")
+                    .forEach {println(it)} }
 }

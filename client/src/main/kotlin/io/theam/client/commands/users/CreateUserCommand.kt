@@ -3,7 +3,9 @@ package io.theam.client.commands.users
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.UsersRestClient
+import io.theam.client.commands.printWith
+import io.theam.client.service.*
+import io.theam.model.api.UserData
 
 @Command(name = "create", description = "Creates a new user")
 class CreateUserCommand : BaseCommand() {
@@ -32,9 +34,13 @@ class CreateUserCommand : BaseCommand() {
         return result
     }
 
-    override fun doRun() {
-        println(pretty_print_json.writeValueAsString(
-                UsersRestClient(username, password).createNewUser(newUsername, newPassword, isAdmin)
-        ))
-    }
+    private val postUrl: String
+        get() = "$host/users?username=$newUsername&password=$newPassword" +
+                (if(isAdmin) "&asAdmin=true" else "")
+
+    private fun createNewUser() : UserData =
+            restClient withUrl postUrl postObject UserData::class.java
+
+    override fun doRun() =
+            createNewUser() printWith pretty_print_json
 }

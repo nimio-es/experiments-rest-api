@@ -4,7 +4,12 @@ import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import io.theam.client.commands.BaseCommand
 import io.theam.client.commands.printWith
-import io.theam.client.service.saveNewProduct
+import io.theam.client.service.bodyOf
+import io.theam.client.service.postEntity
+import io.theam.client.service.withData
+import io.theam.client.service.withUrl
+import io.theam.model.api.ProductData
+import io.theam.model.api.ProductResponse
 
 @Command(name = "create", description = "Creates a new product")
 class CreateProductCommand : BaseCommand() {
@@ -17,6 +22,13 @@ class CreateProductCommand : BaseCommand() {
 
     @Option(name = ["--common-price", "-pr"], description = "Sets the common price of the product")
     var commonPrice: Double = 0.0
+
+    private fun saveNewProduct(): ProductResponse =
+            bodyOf (restClient withUrl
+                    "$host/products" withData
+                    ProductData(ref, name, commonPrice) postEntity
+                    ProductResponse::class.java)
+
 
     override fun validate(): Boolean {
         var result = super.validate()
@@ -32,5 +44,5 @@ class CreateProductCommand : BaseCommand() {
     }
 
     override fun doRun() =
-        restClient().saveNewProduct(ref, name, commonPrice) printWith pretty_print_json
+        saveNewProduct() printWith pretty_print_json
 }

@@ -4,7 +4,10 @@ import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
 import com.github.rvesse.airline.annotations.OptionType
 import io.theam.client.commands.BaseCommand
-import io.theam.client.service.PurchasesRestClient
+import io.theam.client.commands.printWith
+import io.theam.client.service.*
+import io.theam.model.api.PurchaseData
+import java.util.*
 
 @Command(name = "add", description = "Adds a purchase to collection")
 class RegisterNewPurchaseCommand: BaseCommand() {
@@ -21,9 +24,17 @@ class RegisterNewPurchaseCommand: BaseCommand() {
     @Option(type = OptionType.COMMAND, name = [ "--unit-price", "-up" ], description = "The price of each item")
     val priceOfEachItem: Double? = null
 
-    override fun doRun() {
-        println(pretty_print_json.writeValueAsString(
-                PurchasesRestClient(username, password)
-                        .newPurchase(customerId!!, productId!!, numOfItems!!, priceOfEachItem!!)))
-    }
+    private fun newPurchase(): PurchaseData =
+            bodyOf(restClient withUrl
+                    "$host/purchases" withData
+                    PurchaseData(
+                            Date(),
+                            customerId!!,
+                            productId!!,
+                            numOfItems!!,
+                            priceOfEachItem!!) postEntity
+                    PurchaseData::class.java)
+
+    override fun doRun() =
+            newPurchase() printWith pretty_print_json
 }

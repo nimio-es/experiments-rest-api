@@ -17,10 +17,13 @@ abstract class BaseCommand : Runnable {
     }
 
     @Option(name = ["--username", "-u"], description = "Define the user name to access")
-    var username: String = Optional.ofNullable(System.getenv("THEAM_USERNAME")).orElse("")
+    var username: String = System.getenv("THEAM_USERNAME") ?: ""
 
     @Option(name = ["--password", "-p"], description = "Define the user password to access")
-    var password: String = Optional.ofNullable(System.getenv("THEAM_PASSWORD")).orElse("")
+    var password: String = System.getenv("THEAM_PASSWORD") ?: ""
+
+    @Option(name = ["--host", "-h"], description = "Host where the rest API is")
+    var host: String = "http://localhost:8080"
 
     protected open fun validate(): Boolean {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -49,6 +52,7 @@ abstract class BaseCommand : Runnable {
      * Util method that gets the username and password and creates a
      * new RestClient utility and avoid that each command make the same call
      */
-    protected fun restClient(): RestClient = RestClient(username, password)
+    protected val restClient: RestClient
+        get() = RestClient(username, password, host)
 
 }

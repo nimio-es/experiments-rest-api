@@ -1,45 +1,23 @@
 package io.theam.util
 
-import org.slf4j.LoggerFactory
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.*
 
-object UtilBase64Image {
-
-    private val logger = LoggerFactory.getLogger(UtilBase64Image::class.java)
-
-    fun encoder(imagePath: String): String? {
-        val file = File(imagePath)
-        try {
+fun String.encodeFromPath() : String =
+        File(this).let { file ->
             FileInputStream(file).use { imageInFile ->
                 // Reading a Image file from file system
                 val imageData = ByteArray(file.length().toInt())
                 imageInFile.read(imageData)
                 return Base64.getEncoder().encodeToString(imageData)
             }
-        } catch (e: FileNotFoundException) {
-            println("Image not found" + e)
-        } catch (ioe: IOException) {
-            println("Exception while reading the Image " + ioe)
         }
 
-        return null
-    }
-
-    fun decoder(base64Image: String, pathFile: String) {
-        logger.info("Write to file: {}", pathFile)
-        try {
-            FileOutputStream(pathFile).use { imageOutFile ->
-                // Converting a Base64 String into Image byte array
-                val imageByteArray = Base64.getDecoder().decode(base64Image)
-                imageOutFile.write(imageByteArray)
-            }
-        } catch (e: FileNotFoundException) {
-            println("Image not found" + e)
-        } catch (ioe: IOException) {
-            println("Exception while reading the Image " + ioe)
+infix fun String.decodeToFile(pathFile: String) =
+        FileOutputStream(pathFile).use { imageOutFile ->
+            // Converting a Base64 String into Image byte array
+            val imageByteArray = Base64.getDecoder().decode(this)
+            imageOutFile.write(imageByteArray)
         }
-
-        logger.info("File saved!")
-    }
-}
