@@ -12,13 +12,13 @@
         <relativePath />
     </parent>
 
-    <groupId>io.theam</groupId>
-    <artifactId>test-stage-2</artifactId>
+    <groupId>es.nimio</groupId>
+    <artifactId>experiments</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>test-stage-2</name>
-    <description>The second stage of a technical interview with Theam.io company</description>
+    <name>Experiments</name>
+    <description>Some code experiments. Originally the second stage of a technical interview with Theam.io company</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

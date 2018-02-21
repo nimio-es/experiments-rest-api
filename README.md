@@ -1,8 +1,21 @@
-# Second Stage of Technical Coding Interview
+# Experiments
 
-## The requirements 
+## Some preliminary clarifications (prolegomena)
 
-What I have to do:
+This project started as a technical test proposed by [theam.io](http://theam.io/en) in order to collaborate with them. I know some of them in person and I know that they are spectacular professionals, very talented and very motivated people. Thank you very much for the possibility and for the time you dedicated to assist me and review the test.
+
+Consulting in the future my LinkedIn account you will know if the test achieved its objective. I suspect that won't happen. The test was developed during a few complicated months of my working life and most of my limited free time I used it on issues completely unrelated to technology. [I love photography](https://www.flickr.com/photos/saulo_alvarado/). for example, and it's a great escape route.
+
+Regardless of the final result, it has managed to get me out of my *fuc@!$%* pit, at least a little, and return to be interested in code different things to my day to day and mess with some pending things (for some time I'm very interested in Functional Programming but I haven't spent time in putting it into practice, for example).
+
+In that sense, I hope that this will be my experimentation project to prove things. To build and to destroy a moment later. But I will try to maintain the original sense of the proposed problem.
+
+The objective of all this is to mature and put in practice ideas to resume my other project: NOVA (a.k.a. *nimiogcs*). I confess that is the apple of my eyes ;-)
+
+
+## The original requirements 
+
+What I had to do:
 
 - Rest API for Customers. Each customer have to be defined with 
     - First fileName
@@ -13,218 +26,135 @@ What I have to do:
 
 - Only admin roles can access the API. Restrict access using OAuth 2.
 
-- Optionally, one or more cucumber tests to check one or more end-points
+- Optionally, but really optional, one or more cucumber tests to check one or more end-points.
 
 
-## The Solution
+## The "Current" Solution
 
-A multimodule Maven project with a Server (API REST), a Common Library and a Command Line Client to interact with the server.
+If I continued with the idea of testing alternatives, you will see the different results as tags in this same repository. I suppose. The history of commits will also serve to make archeology.
 
-Spring Boot is the heart of the solution. Because develop with Spring Boot is really fast.
+At this moment the solution consists of a multi-module Maven project with a Server (API REST), a Common Library and a Command Line Client to interact with the server. The server part was coded in Java and the rest was coded using Kotlin.
 
+## How to try this pile of...
 
-### Inspiring resources
+### Prerequisites
+ 
+First of all, you need Java 8, at least. Maven too. Of course, a Git client. But above all else, patience and desire to try it.
 
-- The first approach was ~~gutting~~ adapting [Example Spring Boot REST API](https://github.com/gigsterous/gigy-example).
-- [Spring Boot Security OAuth2 Example(Bcrypt Encoder)](http://www.devglan.com/spring-security/spring-boot-security-oauth2-example)
-- [7 Steps to implement OAuth 2 in Spring Boot with Spring Security](https://jugbd.org/2017/09/19/implementing-oauth2-spring-boot-spring-security/)
-- [Minimal implementation of Authorization Server, Resource Server and OAuth2 Client in Spring Boot with Spring Security and JWT](https://github.com/dynamind/spring-boot-security-oauth2-minimal)
-- [Tutorial: Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-- [Secure Spring REST API using OAuth2](http://websystique.com/spring-security/secure-spring-rest-api-using-oauth2/)
+### Build and start up
 
+1. Clone (download) this repository: 
+    ```bash
+    git clone https://github.com/saulo-alvarado/theam.io-api-rest-stage-2.git
+    ```
+1. Path to the folder
+1. Build with Maven:
+    ```bash
+    mvn clean package
+    ```
+1. Start REST api in one terminal. In root directory you'll found `start-server.bat` (Windows) and `start-server.sh` (Linux). Use the one required for your environment.
+1. Only for Linux users, create an alias to the client JAR:
+        ```bash
+        alias nivi='java -jar PATH-TO-PROJECT/client/target/client-*-jar-with-dependencies.jar'
+        ```
+1. Optionally, you can populate the database with `init-data.bat` (Windows) or `init-data.sh` (Linux) and skip some of the next steps.
+1. If you chose not to fill in automatically, you will have to do:
+    1. Register an administrator user. In the beginning there is only one owner user and for everything else you need an administrator user.
+        ```bash
+        nivi users create --new-username=nieves --new-password=guapa --as-admin --username=owner --password=password
+        ```
+1. Set the environment variables so that you don't have to pass the user and the password constantly. In Windows:
+    ```bash
+    SET NIMIO_USERNAME=nieves
+    SET NIMIO_PASSWORD=guapa
+    ```
+    In Linux:
+    ```bash
+    export NIMIO_USERNAME=nieves
+    export NIMIO_PASSWORD=guapa
+    ```
+    Obviously put the values that you used if you had done it manually.
+1. Request to the CLI for help and play with it. In the `init-data.bat` you can see different uses of the CLI. Some examples:
+    ```bash
+    nivi customers add --first-name Lourdes --last-name Carmona --ndi 123456789X
+    nivi customers add --first-name Pablo --last-name Motos --ndi 987654321Y
+    nivi customers list
+    nivi products create --reference "XAA0913" --name "Gominolas" --common-price 0.01
+    nivi products create --reference "PIASS12" --name "Lápices" --common-price 9.81
+    nivi purchases add --customer-id 1 --product-id 1 --num-of-items 20 --unit-price=0.008
+    nivi purchases add --customer-id 2 --product-id 1 --num-of-items 11 --unit-price=0.012
+    nivi purchases list --customer-id 1
+    nivi purchases list --product-id 1
+    ```
 
-## Current version: What it does and what it does not do
+### The modules
 
-This version does:
+The solution is composed three moduled:
 
-- CRUD for customers
-- Customers include purchase information (one to many relation)
-- There is an oauth url (auto-generated from Spring Boot) to get a token using password Grant Type and client-id + client-secret
-- Unit tests and a pair of cucumber scenarios 
-- Check role admin
-- Work with binary fileData (customer image)
-- Command Line Client with most of the operations implemented.
+#### Common
 
-This version does not (yet):
+Used by the other two modules, in essence *it's a silly and unnecessary* module, but it's here to facilitate the typed construction of the client one and to simulate that the REST Api is a kind of Gateway where the data is not direct, but some composition of queries to various "services". It gives a lot of unnecessary work of data transformation, but on the other hand it allows to code the client fast.
 
-- Manage purchases 
-- Poor version of purchase (It's necessary refer articles, for example?)
+Kotlin and not much else to tell.
 
-Of those, the last one would be the real challenges. For the rest of those would be more of the same.
+#### Server
 
+The Spring Boot one. It's the REST Api bases on an H2 database that doesn't persist anything. You'll lose all every time you stop the service.
 
-## Downloading, compiling and executing 
+Pure Java and a lot of magic done by Spring.
 
-Prepare, if you haven't, the environment installing Java 8 and Maven.
+#### Client
 
-Download the code to a local folder with git, and go to the folder:
+For me, the most interesting one. A lot of commands to create, show and more data in your console without to fight with URLs, parameters and authentication.
 
-```bash
-git clone https://github.com/saulo-alvarado/theam.io-api-rest-stage-2.git
-cd theam.io-api-rest-stage-2
-```
+Kotlin and some experiments with absurd DSLs.   
 
-Build: 
+### The Http Rest Api
 
-```bash
-mvn clean install
-```
+Of course you can access each of the endpoints offered by the API.
 
-Run the API using:
+I highly recommend installing [HTTPie](https://httpie.org/) and the [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin.
 
-```bash
-cd server
-mvn spring-boot:run
-```
+You will also need to create an administrator user.
 
-Now you can interact with it (some user preexist because the database is populated at startup).
+1. First of all you need to get the token of the owner user:
+    ```bash
+    http -v -f -a 'nimio:nivi-is-beautiful' POST http://localhost:8080/oauth/token 'grant_type=password' 'username=owner' 'password=password'
+    ```
+1. Export the token value `SET JWT_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9...` or `export JWT_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9`
+1. Create a new user:
+    ```
+    http --auth-type=jwt -v POST http://localhost:8080/users?username=nieves&password=guapa&asAdmin=true
+    ```
+1. Ask for OAuth token of the new user (like the first step but using the new user credentials) and change JWT_AUTH_TOKEN environment variable.
+1. Play with rest of the endpoints:
+    ```bash
+    http --auth-type=jwt -v POST http://localhost:8080/customers firstName=Saulo lastName=Alvarado nid=99999999X
+    http --auth-type=jwt -v GET http://localhost:8080/customers/1
+    http --auth-type=jwt -v DELETE http://localhost:8080/customers/1
+    ...
+    ``` 
 
-To end the session you can break the execution with `CTRL+C`. 
-
-
-## Use the API
-
-### API URIs
+#### API URIs
 
 These are the resources offered by the API.
  
 | URN | VERB | Purpose |
 | --- | --- | --- |
+| /users | GET | List all users |
+| /users?username=&password=&asAdmin=true/false | POST | Adds a new user | 
 | /customers  | GET | List all customers (if use query param "sorted", the result will be in order) |
 | /customers/:id | GET | Gets fileData for the customer with :id |
 | /customers | POST | Adds a new customer (when fileData is correct) |
-| /customers | PUT | Change base information of the customer |
 | /customers/:id | DELETE | Deletes the customer with the :id |
-| /customers/:id | OPTIONS | Checks if a customer exists with that :id |
 | /customers/:id/image | GET | Gets the image associated with the customer |
 | /customers/:id/image | POST | Store a new (or substitute) the image associated with the customer |
-| /customers/:id/image | PUT | Does the same of POST case |
-| /customers/:id/image | DELETE | Erases the image of the customer |
-| /customers/:id/purchases | GET | List all purchases of the customer |
-| /customers/:id/purchases/:idpurchase | GET | Gets information of the selected purchase |
-| /customers/:id/purchases | POST | Insert a new purchase in the list of purchases of a customer |
-| /customers/:id/purchases | PUT | Change information of a exist purchase in the list of a customer |
-| /customers/:id/purchases/:idpurchase | DELETE | Removes a purchase from the list of purchases of a customer |
-
-### Access using CLI (recommended)
-
-You cau use the Command Line Client to access the API. This option is recommended because the part of get OAuth Token is hidden to the user.
-
-To use the client, open a new console terminal and go to client subforlder. Yoy can create an alias to the jar:
-
-```bash
-alias theam-cli="java -jar PATH_TO_TARGET_FOLDER/client-1.0.0-SNAPSHOT.jar"
-``` 
-
-After that you can call the command line using this alias. Use help command to know how to use:
-
-```bash
-theam-cli help
-```
-
-#### Authentication
-
-All operation required the username and password information (noelia.capaz, password), but you can export environment variables to set those values and avoid to pass each time:
-
-```bash
-export THEAM_USERNAME=noelia.capaz
-export THEAM_PASSWORD=password
-```
-
-If you use other user (`pepito.currito`) every operation will fail.
-
-#### Examples
-
-* Get customer list (json format):
-
-    ```bash
-    theam-cli customers
-    ```
-* Add a new customer:
-
-    ```bash
-    theam-cli customers add --first-fileName Oscar --last-fileName Rinconero --ndi 0000000
-    ```
-
-* Show an existent customer:
-
-    ```bash
-    theam-cli customers add --id 2 
-    ```
-
-* Set the image of a customer (the image has to exist):
-
-    ```bash
-    theam-cli customers image set --id 1 PATH_TO_EXISTENT_IMAGE 
-    ```
-    
-* Get/Download the image of a customer and show in default application:
-
-    ```bash
-    theam-cli customers image get --id 1 --show PATH_TO_SAVE_IMAGE
-    ```
-
-
-### Access using HTTPie (or CURL)
-
-Generally I prefer [HTTPie](https://httpie.org/) instead CURL. It's recommendable to install [httpie-jwt-auth](https://github.com/teracyhq/httpie-jwt-auth) plugin. In current version I use the JWT token simulation to protect the API.   
-
-#### Before call
-
-With each call to the API you need to include an oauth token. To get one, use the next command line operation:
-
-```bash
-http -v -f -a 'theam:secret' POST http://localhost:8080/oauth/token 'grant_type=password' 'username=noelia.capaz' 'password=password'
-```
-
-Copy the token (only the text) and set environment variable `JWT_AUTH_TOKEN` with previous value:
-
-
-```bash
-export JWT_AUTH_VALUE=eyJhbGciOiJIUzI1NiJ9 ...
-```
-
-#### Different roles
-
-In this example you can use two different userData with distinct roles. 
-
-- `noelia.capaz` with ADMIN role
-- `pepito.currito` without ADMIN role (only USER role)
-
-Both userData has `password` as password. Isn't easy?
-
-You can use `pepito.currito`to prove that only userData with administrative permissions can access the API methods.
-
-#### Examples
-
-These are examples of use the API with HTTPie. Use in all of these the parameter `--auth-type=jwt -v` 
-
-* List of customers (**http://localhost:8080/customers**):
-
-    ```bash
-    http --auth-type=jwt -v [GET] http://localhost:8080/customers
-    ```
-
-* Get fileData for first customer (id 1) (**http://localhost:80807/customers/1**):
-
-    ```bash
-    http --auth-type=jwt -v [GET] http://localhost:8080/customers/1
-    ```
-    
-* Create a new customer (**http://localhost:8080/customers** with **POST verb**):
-    
-    ```bash
-    http --auth-type=jwt -v POST http://localhost:8080/customers firstName=Saulo lastName=Alvarado nid=99999999X
-    ```
-    
-* Change/Edit fileData of a customer (**http://localhost:8080/customers** with **PUT verb**):
-
-     ```bash
-     http --auth-type=jwt -v PUT http://localhost:8080/customers id=1 firstName=Saulo lastName="Alvarado Mateos" nid=99999999X
-     ```
-
-* Delete first customer (**http://localhost:8080/customers/1** with **DELETE verb**):
-
-    ```bash
-    http --auth-type=jwt -v DELETE http://localhost:8080/customers/1
-    ```
+| /images | GET | List of all registered images |
+| /images/:id | GET | Gets/Download one image |
+| /products | GET | List of all registered products |
+| /products/:id | GET | Get the info of one product |
+| /products | POST | Adds a new product |
+| /purchases/ofCustomer/:customerId | GET | List of the purchases of one customer |
+| /purchases/ofProduct/:productId | GET | List of the purchases in which a product has been sold |
+| /purchases/ofCustomer/:customerId/ofProduct/:productId | GET | List of the purchases of one customer in which a product has been sold |
+| /purchases | POST | Adds a new purchase |
