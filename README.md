@@ -4,13 +4,11 @@
 
 This project started as a technical test proposed by [theam.io](http://theam.io/en) in order to collaborate with them. I know some of them in person and I know that they are spectacular professionals, very talented and very motivated people. Thank you very much for the possibility and for the time you dedicated to assist me and review the test.
 
-Consulting in the future my LinkedIn account you will know if the test achieved its objective. I suspect that won't happen. The test was developed during a few complicated months of my working life and most of my limited free time I used it on issues completely unrelated to technology. [I love photography](https://www.flickr.com/photos/saulo_alvarado/). for example, and it's a great escape route.
-
-Regardless of the final result, it has managed to get me out of my *fuc@!$%* pit, at least a little, and return to be interested in code different things to my day to day and mess with some pending things (for some time I'm very interested in Functional Programming but I haven't spent time in putting it into practice, for example).
+Regardless of the final result, it has gotten me interested in doing things differently than what I've doing in recent years. And try new things too. For some time I'm very interested in Functional Programming but I haven't spent time in putting it into practice, for example.
 
 In that sense, I hope that this will be my experimentation project to prove things. To build and to destroy a moment later. But I will try to maintain the original sense of the proposed problem.
 
-The objective of all this is to mature and put in practice ideas to resume my other project: NOVA (a.k.a. *nimiogcs*). I confess that is the apple of my eyes ;-)
+The objective of all this is to mature and put in practice ideas to resuscitate my other project: NOVA (a.k.a. *nimiogcs*). I confess that is the apple of my eyes ;-)
 
 
 ## The original requirements 
@@ -31,9 +29,11 @@ What I had to do:
 
 ## Iterations
 
-The main idea is to maintain only one iteration in master/default branch (no branchs) and, at the end of each one, create a tag and start a new iteration. 
+The main idea is to maintain only one iteration in master/default branch (no branches) and, at the end of each one, create a tag and start a new iteration. 
 
-Iteration 0: The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/theam.io-api-rest-stage-2/tree/iteration-0_jvm-using-spark-framework)  
+- Iteration 0 (or The Panic Iteration): The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/theam.io-api-rest-stage-2/tree/iteration-0_jvm-using-spark-framework).
+
+    The panic one because it is the iteration with which I started just when they told me that I was going to the second phase of the selection process. :scream:
 
 ## The "Current" Solution: Iteration 1
 
@@ -101,7 +101,7 @@ First of all, you need Java 8, at least. Maven too. Of course, a Git client. But
 
 ### The modules
 
-The solution is composed three moduled:
+The solution consists of three modules:
 
 #### Common
 
