@@ -32,6 +32,9 @@
         <module>server</module>
         <module>common</module>
         <module>client</module>
+        <!-- DOESN'T WORK AT THE MOMENT
+        <module>integration-test</module>
+        -->
     </modules>
 
     <dependencyManagement>
