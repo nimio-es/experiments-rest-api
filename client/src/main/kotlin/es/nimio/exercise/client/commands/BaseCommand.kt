@@ -1,5 +1,6 @@
 package es.nimio.exercise.client.commands
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.rvesse.airline.annotations.Option
@@ -12,6 +13,7 @@ abstract class BaseCommand : Runnable {
     companion object {
         @JvmStatic
         var pretty_print_json : ObjectMapper = ObjectMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                 .configure(SerializationFeature.INDENT_OUTPUT, true)
     }

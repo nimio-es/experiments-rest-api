@@ -3,6 +3,7 @@ package es.nimio.exercise.controller;
 import es.nimio.exercise.repository.ImagesRepository;
 import es.nimio.exercise.model.Customer;
 import es.nimio.exercise.repository.CustomersRepository;
+import es.nimio.exercise.repository.PurchasesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,9 @@ public class CustomersControllerTest {
 
 	@MockBean
 	private ImagesRepository imageRepository;
+
+    @MockBean
+	private PurchasesRepository purchasesRepository;
 
 	private Customer customer;
 	

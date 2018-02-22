@@ -2,6 +2,7 @@ package es.nimio.exercise.client.commands.customers
 
 import com.github.rvesse.airline.annotations.Command
 import com.github.rvesse.airline.annotations.Option
+import com.github.rvesse.airline.annotations.OptionType
 import es.nimio.exercise.client.commands.BaseCommand
 import es.nimio.exercise.client.commands.printWith
 import es.nimio.exercise.client.service.bodyOf
@@ -18,23 +19,26 @@ import java.io.IOException
 @Command(name = "show", description = "Shows the info of a customer")
 class ShowCustomerInfoCommand : BaseCommand() {
 
-    @Option(name = ["--id"], description = "Customer identity to search")
+    @Option(type = OptionType.COMMAND, name = ["--id"], description = "Customer identity to search")
     var customerId: Long? = null
 
-    @Option(name = ["--first-name", "-fn"], description = "Customer first name to search")
+    @Option(type = OptionType.COMMAND, name = ["--first-name", "-fn"], description = "Customer first name to search")
     var firstName: String? = null
 
-    @Option(name = ["--last-name", "-ln"], description = "Customer last name to search")
+    @Option(type = OptionType.COMMAND, name = ["--last-name", "-ln"], description = "Customer last name to search")
     var lastName: String? = null
 
-    @Option(name = ["--ndi"], description = "Customer last name to search")
+    @Option(type = OptionType.COMMAND, name = ["--ndi"], description = "Customer last name to search")
     var ndi: String? = null
 
-    @Option(name = ["--image-file"], description = "Include in the info the image and save in the path")
+    @Option(type = OptionType.COMMAND, name = ["--image-file"], description = "Include in the info the image and save in the path")
     var imagePath: String? = null
 
-    @Option(name = ["--show"], description = "Opens default application to show the image")
+    @Option(type = OptionType.COMMAND, name = ["--show"], description = "Opens default application to show the image")
     var showImage = false
+
+    @Option(type = OptionType.COMMAND, name = ["--include-purchases"], description = "Include the purchases made by this customer")
+    var includePurchases : Boolean = false
 
     override fun validate(): Boolean {
         var result = super.validate()
@@ -49,7 +53,7 @@ class ShowCustomerInfoCommand : BaseCommand() {
 
     private fun getCustomer() =
             bodyOf(restClient withUrl
-                    "$baseUrl/${customerId!!}?includeImage=$showImage" getEntity
+                    "$baseUrl/${customerId!!}?includeImage=$showImage&includePurchases=$includePurchases" getEntity
                     CustomerResponse::class.java)
 
     private fun lookupCustomerFirstName(): CustomerResponse =

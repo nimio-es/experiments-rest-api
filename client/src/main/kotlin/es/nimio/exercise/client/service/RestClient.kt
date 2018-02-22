@@ -1,5 +1,6 @@
 package es.nimio.exercise.client.service
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
@@ -31,6 +32,7 @@ class RestClient(username: String, password: String, urlBase: String) {
         this.restTemplate = OAuth2RestTemplate(resourceDetails, clientContext)
         val mpcv = MappingJackson2HttpMessageConverter()
         mpcv.objectMapper.registerKotlinModule()
+        mpcv.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         restTemplate.messageConverters = Arrays.asList<HttpMessageConverter<*>>(mpcv)
     }
 }

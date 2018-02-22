@@ -17,7 +17,12 @@ data class CustomerData(val firstName:String, val lastName:String, val ndi:Strin
 data class ImageData(val fileName: String, val fileData: String)
 data class UserData(val userName: String, val authorities: List<String>)
 data class ProductData(val ref: String, val name: String, val commonPrice: Double)
-data class PurchaseData(@JsonFormat(pattern = "YYYY-MM-dd") val date: Date, val customerId: Long, val productId: Long, val numItems: Int, val priceOfItem: Double)
+data class PurchaseData(
+        @JsonFormat(pattern = "YYYY-MM-dd") val date: Date,
+        val customerId: Long,
+        val productId: Long,
+        val numItems: Int,
+        val priceOfItem: Double)
 
 /*
  * Response data
@@ -40,7 +45,8 @@ sealed class CustomerResponseImageData {
 data class CustomerResponse(
         val customerId: Long,
         val customer: CustomerData,
-        val image: CustomerResponseImageData)
+        val image: CustomerResponseImageData,
+        val purchases: Collection<PurchaseData>? )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
 sealed class ImageResponse {

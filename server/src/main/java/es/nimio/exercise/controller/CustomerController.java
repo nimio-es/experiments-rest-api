@@ -28,13 +28,15 @@ public class CustomerController extends CustomerBaseController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<CustomerResponse> getCustomer(
             @PathVariable long id,
-            @RequestParam(name = "includeImage", required = false, defaultValue = "false") boolean includeImage) {
+            @RequestParam(name = "includeImage", required = false, defaultValue = "false") boolean includeImage,
+            @RequestParam(name = "includePurchases", required = false, defaultValue = "false") boolean includePurchases) {
 
         // the image includes the customer
         final Image image = imageRepository.findByCustomerId(id);
         if(image != null)
             return new ResponseEntity<>(
-                    toCustomerResponse(image.getCustomer(), image, !includeImage),
+                    toCustomerResponse(image.getCustomer(), image, !includeImage,
+                            includePurchases ? purchasesRepository.findByCustomerId(id) : null),
                     HttpStatus.OK);
 
         return Optional
