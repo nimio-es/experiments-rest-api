@@ -59,7 +59,7 @@ echo ================================================
 echo = DATA INITIALIZED
 echo = -------------------------------------------- =
 echo = Set the next environment vars to simplify    =
-echo = the use of tcli command:                     =
+echo = the use of nivi command:                     =
 echo =                                              =
 echo = SET NIMIO_USERNAME=nieves                    =
 echo = SET NIMIO_PASSWORD=guapa                     =

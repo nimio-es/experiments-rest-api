@@ -18,8 +18,8 @@ The objective of all this is to mature and put in practice ideas to resume my ot
 What I had to do:
 
 - Rest API for Customers. Each customer have to be defined with 
-    - First fileName
-    - Last fileName
+    - First Name
+    - Last Name
     - National Document of Identity
     - Image (optional)
     - With each customer also store last purchases information
@@ -29,11 +29,23 @@ What I had to do:
 - Optionally, but really optional, one or more cucumber tests to check one or more end-points.
 
 
-## The "Current" Solution
+## Iterations
 
-If I continued with the idea of testing alternatives, you will see the different results as tags in this same repository. I suppose. The history of commits will also serve to make archeology.
+The main idea is to maintain only one iteration in master/default branch (no branchs) and, at the end of each one, create a tag and start a new iteration. 
 
-At this moment the solution consists of a multi-module Maven project with a Server (API REST), a Common Library and a Command Line Client to interact with the server. The server part was coded in Java and the rest was coded using Kotlin.
+Iteration 0: The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/theam.io-api-rest-stage-2/tree/iteration-0_jvm-using-spark-framework)  
+
+## The "Current" Solution: Iteration 1
+
+At this moment the solution consists of a multi-module Maven project with a Server (REST API), a Common Library and a Command Line Client to interact with the server. The server part was coded in Java and the rest was coded using Kotlin.
+
+What I try to learn here:
+
+* Spring Boot: every Java developer should understand the basis of Spring Framework
+* OAuth 2: Yeah, the standard security protocol for REST APIs
+* Kotlin: Improve the use of this language
+* Cucumber/Clojure: At least a bit taste of JVM flavour using Clojure (Clojure is a great unknown to me)
+* RESTful APIs: Not so unknown, but I seek to achieve purity in the approach
 
 ## How to try this pile of...
 
