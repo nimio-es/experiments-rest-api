@@ -10,10 +10,10 @@ import java.util.Collection;
 public interface CustomersRepository extends CrudRepository<Customer, Long> {
 	
 	Collection<Customer> findAll();
-	
-	Customer findByFirstName(String firstName);
 
-	Customer findByLastName(String lastName);
+	Collection<Customer> findByFirstName(String firstName);
 
-	Customer findByNdi(String ndi);
+	Collection<Customer> findByLastName(String lastName);
+
+	Collection<Customer> findByNdi(String ndi);
 }

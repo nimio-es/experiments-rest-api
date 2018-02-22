@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -33,32 +35,20 @@ public class CustomerRepositoryTest {
     }
 
     @Test
-    public void repositorySavesPersonAndThenAddPurchase() {
+    public void repositorySavesPersonAndFindByFirstName() {
 
         // Given: person saved
         Customer customer = new Customer();
         customer.setFirstName("Manuel");
         customer.setLastName("Mañoso");
         customer.setNdi("000000000X");
-//        customer.setPurchases(Collections.emptySet());
-        customerRepository.save(customer);
+        assertNotNull(customerRepository.save(customer));
 
-        // When: load, add purchase and save
-        Customer loadedCustomer = customerRepository.findByFirstName("Manuel");
+        // Then: located using first name
+        Collection<Customer> loadedCustomers = customerRepository.findByFirstName("Manuel");
+        assertNotNull(loadedCustomers);
+        assertFalse(loadedCustomers.isEmpty());
+        Customer loadedCustomer = new ArrayList<>(loadedCustomers).get(0);
         assertNotNull(loadedCustomer);
-//        assertEquals(0, loadedCustomer.getPurchases().size());
-//        Purchase purchase = new Purchase();
-//        purchase.setCustomer(loadedCustomer);
-//        purchase.setDate(new Date());
-//        purchase.setAmmount(100);
-//        Set<Purchase> newSet = new HashSet<>(loadedCustomer.getPurchases());
-//        newSet.add(purchase);
-//        loadedCustomer.setPurchases(newSet);
-        customerRepository.save(loadedCustomer);
-
-        // Then: reloaded there is one purchase
-        Customer secondLoadedCustomer = customerRepository.findByFirstName("Manuel");
-        assertNotNull(secondLoadedCustomer);
-//        assertEquals(1, secondLoadedCustomer.getPurchases().size());
     }
 }

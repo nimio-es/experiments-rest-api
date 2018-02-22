@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = CustomersController.class, secure = false)
+@WebMvcTest(value = { CustomersController.class, CustomerController.class }, secure = false)
 public class CustomersControllerTest {
 
 	@Autowired
