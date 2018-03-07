@@ -44,7 +44,7 @@ What I try to learn here:
 * Spring Boot: every Java developer should understand the basis of Spring Framework
 * OAuth 2: Yeah, the standard security protocol for REST APIs
 * Kotlin: Improve the use of this language
-* Cucumber/Clojure: At least a bit taste of JVM flavour using Clojure (Clojure is a great unknown to me)
+* ~~Cucumber/Clojure: At least a bit taste of JVM flavour using Clojure (Clojure is a great unknown to me)~~  Out of focus at the moment 'cause I'll change iteration.
 * RESTful APIs: Not so unknown, but I seek to achieve purity in the approach
 
 ## How to try this pile of...
