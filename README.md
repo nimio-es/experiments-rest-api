@@ -31,7 +31,7 @@ What I had to do:
 
 The main idea is to maintain only one iteration in master/default branch (no branches) and, at the end of each one, create a tag and start a new iteration. 
 
-- Iteration 0 (or The Panic Iteration): The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/theam.io-api-rest-stage-2/tree/iteration-0_jvm-using-spark-framework).
+- Iteration 0 (or The Panic Iteration): The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-0_jvm-using-spark-framework).
 
     The panic one because it is the iteration with which I started just when they told me that I was going to the second phase of the selection process. :scream:
 
