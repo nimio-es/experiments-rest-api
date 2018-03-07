@@ -1,1 +1,1 @@
-@call java -jar D:\dev\code\theam.io-api-rest-stage-2\client\target\client-1.0.0-SNAPSHOT-jar-with-dependencies.jar %*
+@call java -jar %~dp0\client\build\libs\client-all-1.0.0-SNAPSHOT.jar %*

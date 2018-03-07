@@ -31,43 +31,46 @@ What I had to do:
 
 The main idea is to maintain only one iteration in master/default branch (no branches) and, at the end of each one, create a tag and start a new iteration. 
 
-- Iteration 0 (or The Panic Iteration): The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-0_jvm-using-spark-framework).
+- Iteration 0: The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-0_jvm-using-spark-framework).
+- Iteration 1: Keeping in the JVM, Spring Boot, Kotlin, Maven and not much more. Tag: [iteration-1_jvm_kotlin_and_springboot_with_maven](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-1_jvm_kotlin_and_springboot_with_maven) 
 
-    The panic one because it is the iteration with which I started just when they told me that I was going to the second phase of the selection process. :scream:
+## The "Current" Solution: Iteration 1.1
 
-## The "Current" Solution: Iteration 1
+Small or no functional difference with the base version, [iteration 1](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-1_jvm_kotlin_and_springboot_with_maven). Only:
 
-At this moment the solution consists of a multi-module Maven project with a Server (REST API), a Common Library and a Command Line Client to interact with the server. The server part was coded in Java and the rest was coded using Kotlin.
-
-What I try to learn here:
-
-* Spring Boot: every Java developer should understand the basis of Spring Framework
-* OAuth 2: Yeah, the standard security protocol for REST APIs
-* Kotlin: Improve the use of this language
-* ~~Cucumber/Clojure: At least a bit taste of JVM flavour using Clojure (Clojure is a great unknown to me)~~  Out of focus at the moment 'cause I'll change iteration.
-* RESTful APIs: Not so unknown, but I seek to achieve purity in the approach
+* [Gradle](https://gradle.org/) as build tool.
+* [Arrow Library](https://www.47deg.com/blog/announcing-arrow-for-kotlin/), Functional Programming for Kotlin.
+    * At least for doing [arguments validation](http://arrow-kt.io/docs/datatypes/validated/) 
+* Transform all code to Kotlin (Spring Boot) and remove any Java class.
 
 ## How to try this pile of...
 
 ### Prerequisites
  
-First of all, you need Java 8, at least. Maven too. Of course, a Git client. But above all else, patience and desire to try it.
+First of all, you need Java 8, at least. Gradle for building is required, but you can use the gradlew script to do all the job when Gradle isn't in your system pre-installed. Of course, a Git client. 
+
+But above all else, you need a lot of patience and desire to try it.
 
 ### Build and start up
 
 1. Clone (download) this repository: 
     ```bash
-    git clone https://github.com/saulo-alvarado/theam.io-api-rest-stage-2.git
+    git clone https://github.com/saulo-alvarado/experiments-rest-api.git
     ```
 1. Path to the folder
-1. Build with Maven:
+1. Build with Gradle:
     ```bash
-    mvn clean package
+    gradlew clean 
+    gradlew build
+    gradlew fatJar
     ```
+    
+    `fatJar` is a custom task defined into client for building a independent jar with all dependencies into it.
+    
 1. Start REST api in one terminal. In root directory you'll found `start-server.bat` (Windows) and `start-server.sh` (Linux). Use the one required for your environment.
 1. Only for Linux users, create an alias to the client JAR:
         ```bash
-        alias nivi='java -jar PATH-TO-PROJECT/client/target/client-*-jar-with-dependencies.jar'
+        alias nivi='java -jar PATH-TO-PROJECT/client/build/libs/client-all-*.jar'
         ```
 1. Optionally, you can populate the database with `init-data.bat` (Windows) or `init-data.sh` (Linux) and skip some of the next steps.
 1. If you chose not to fill in automatically, you will have to do:

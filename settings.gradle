@@ -1,0 +1,8 @@
+rootProject.name = 'experiments-rest-api'
+include ':server'
+include ':common'
+include ':client'
+
+project(':server').projectDir = "$rootDir/server" as File
+project(':common').projectDir = "$rootDir/common" as File
+project(':client').projectDir = "$rootDir/client" as File

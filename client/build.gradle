@@ -1,0 +1,26 @@
+
+description = ''
+
+apply plugin: 'kotlin'
+
+dependencies {
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version:'1.7.25'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.1.11'
+    compile group: 'ch.qos.logback', name: 'logback-core', version:'1.1.11'
+    compile project(':common')
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.3.2'
+    compile group: 'com.github.rvesse', name: 'airline', version:'2.3.0'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version:'2.0.14.RELEASE'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'es.nimio.exercise.client.ClientApp'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
