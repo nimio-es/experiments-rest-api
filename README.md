@@ -1,53 +1,24 @@
 # Experiments
 
-## Some preliminary clarifications (prolegomena)
+See master branch README.md for understanding of the scope of this repository.
 
-This project started as a technical test proposed by [theam.io](http://theam.io/en) in order to collaborate with them. I know some of them in person and I know that they are spectacular professionals, very talented and very motivated people. Thank you very much for the possibility and for the time you dedicated to assist me and review the test.
+## The "Current" Solution
 
-Regardless of the final result, it has gotten me interested in doing things differently than what I've doing in recent years. And try new things too. For some time I'm very interested in Functional Programming but I haven't spent time in putting it into practice, for example.
-
-In that sense, I hope that this will be my experimentation project to prove things. To build and to destroy a moment later. But I will try to maintain the original sense of the proposed problem.
-
-The objective of all this is to mature and put in practice ideas to resuscitate my other project: NOVA (a.k.a. *nimiogcs*). I confess that is the apple of my eyes ;-)
-
-
-## The original requirements 
-
-What I had to do:
-
-- Rest API for Customers. Each customer have to be defined with 
-    - First Name
-    - Last Name
-    - National Document of Identity
-    - Image (optional)
-    - With each customer also store last purchases information
-
-- Only admin roles can access the API. Restrict access using OAuth 2.
-
-- Optionally, but really optional, one or more cucumber tests to check one or more end-points.
-
-
-## Iterations
-
-The main idea is to maintain only one iteration in master/default branch (no branches) and, at the end of each one, create a tag and start a new iteration. 
-
-- Iteration 0: The first attempt. JVM World using Spark Framework. Tag: [iteration-0_jvm-using-spark-framework](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-0_jvm-using-spark-framework).
-- Iteration 1: Keeping in the JVM, Spring Boot, Kotlin, Maven and not much more. Tag: [iteration-1_jvm_kotlin_and_springboot_with_maven](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-1_jvm_kotlin_and_springboot_with_maven) 
-
-## The "Current" Solution: Iteration 1.1
-
-Small or no functional difference with the base version, [iteration 1](https://github.com/saulo-alvarado/experiments-rest-api/tree/iteration-1_jvm_kotlin_and_springboot_with_maven). Only:
+Small or no functional difference with the base version made with Maven, but:
 
 * [Gradle](https://gradle.org/) as build tool.
 * [Arrow Library](https://www.47deg.com/blog/announcing-arrow-for-kotlin/), Functional Programming for Kotlin.
     * At least for doing [arguments validation](http://arrow-kt.io/docs/datatypes/validated/) 
 * Transform all code to Kotlin (Spring Boot) and remove any Java class.
+* [Vagrant](https://www.vagrantup.com/)
 
 ## How to try this pile of...
 
 ### Prerequisites
  
-First of all, you need Java 8, at least. Gradle for building is required, but you can use the gradlew script to do all the job when Gradle isn't in your system pre-installed. Of course, a Git client. 
+First of all, you need Java 8, at least. Gradle for building is required, but you can use the gradlew script to do all the job when Gradle isn't in your system pre-installed. Of course, a Git client.
+
+Or you can use [Vagrant](https://www.vagrantup.com/) for isolating the development environment. Up to you! 
 
 But above all else, you need a lot of patience and desire to try it.
 
@@ -58,6 +29,11 @@ But above all else, you need a lot of patience and desire to try it.
     git clone https://github.com/saulo-alvarado/experiments-rest-api.git
     ```
 1. Path to the folder
+1. In case you decided to use Vagrant, you need to start it and connect with:
+    1. `vagrant up` to start the environment
+    1. `vagrant ssh` to connect to the Virtual Machine where the environment is
+    1. `cd /vagrant`, where the shared folder is in the guest machine
+    1. where in the next steps you see `gradlew` prefix it with `./`, then use `./gradlew`
 1. Build with Gradle:
     ```bash
     gradlew clean 
