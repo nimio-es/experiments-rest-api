@@ -1,6 +1,7 @@
 package es.nimio.exercise.repository;
 
 import es.nimio.exercise.model.Product;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class ProductsRepositoryTest {
     private ProductsRepository productsRepository;
 
     @Test
+    @Ignore
     public void repositorySavesProduct() {
         Product product = new Product();
         product.setRef("JUGUETO");

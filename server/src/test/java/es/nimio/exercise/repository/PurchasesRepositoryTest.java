@@ -3,6 +3,7 @@ package es.nimio.exercise.repository;
 import es.nimio.exercise.model.Customer;
 import es.nimio.exercise.model.Product;
 import es.nimio.exercise.model.Purchase;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class PurchasesRepositoryTest {
     private PurchasesRepository purchasesRepository;
 
     @Test
+    @Ignore
     public void repositorySavesPurchase() {
 
         final Customer savedCustomer = customersRepository.save(

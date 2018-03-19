@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '1.5.9.RELEASE'
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
 }
 
 apply plugin: 'java'
@@ -11,16 +11,16 @@ targetCompatibility = 1.8
 
 dependencies {
     compile project(':common')
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.2.21'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.2.21'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '1.5.9.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.9.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.9.RELEASE'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: "$kotlinVersion"
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: "$kotlinVersion"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "$springBootVersion"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "$springBootVersion"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "$springBootVersion"
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.9.4'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.9.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "$springBootVersion"
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.0.14.RELEASE'
     runtime group: 'com.h2database', name: 'h2', version: '1.4.196'
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.9.RELEASE') {
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "$springBootVersion") {
         exclude(module: 'commons-logging')
     }
 }

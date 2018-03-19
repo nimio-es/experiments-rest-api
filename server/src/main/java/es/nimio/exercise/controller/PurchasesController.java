@@ -76,12 +76,12 @@ public class PurchasesController {
     public ResponseEntity<PurchaseData> registerPurchase(@RequestBody @Valid PurchaseData purchaseData) {
         final Purchase purchase = new Purchase();
         purchase.setDate(purchaseData.getDate());
-        purchase.setCustomer(customersRepository.findOne(purchaseData.getCustomerId()));
-        purchase.setProduct(productsRepository.findOne(purchaseData.getProductId()));
+        purchase.setCustomer(customersRepository.findById(purchaseData.getCustomerId()).get());
+        purchase.setProduct(productsRepository.findById(purchaseData.getProductId()).get());
         purchase.setNumOfItems(purchaseData.getNumItems());
         purchase.setPriceOfItem(purchaseData.getPriceOfItem());
 
-        return Optional.ofNullable(purchaseRepository.save(purchase))
+        return Optional.of(purchaseRepository.save(purchase))
                 .map(p -> new ResponseEntity<>(
                         new PurchaseData(
                                 p.getDate(),
@@ -90,7 +90,7 @@ public class PurchasesController {
                                 p.getNumOfItems(),
                                 p.getPriceOfItem()),
                         HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>((PurchaseData)null, HttpStatus.BAD_REQUEST));
+                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
 }

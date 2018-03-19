@@ -24,25 +24,23 @@ public class ProductsController {
     public ResponseEntity<Collection<ProductResponse>> getAllProducts() {
         final Iterable<Product> loadedProducts = productRepository.findAll();
         return new ResponseEntity<>(
-                loadedProducts != null
-                        ? StreamSupport.stream(loadedProducts.spliterator(), true)
+                StreamSupport.stream(loadedProducts.spliterator(), true)
                         .map(p -> new ProductResponse(p.getId(),
                                 new ProductData(p.getRef(), p.getName(), p.getCommonPrice())))
-                        .collect(Collectors.toList())
-                        :new ArrayList<ProductResponse>(),
+                        .collect(Collectors.toList()),
                 HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable(name="id")Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable(name = "id") Long id) {
         return
-                Optional.ofNullable(productRepository.findOne(id))
-                    .map(p -> new ResponseEntity<>(
-                            new ProductResponse(
-                                    p.getId(),
-                                    new ProductData(p.getRef(), p.getName(), p.getCommonPrice())),
-                            HttpStatus.OK))
-                .orElse(new ResponseEntity<>((ProductResponse)null, HttpStatus.NOT_FOUND));
+                productRepository.findById(id)
+                        .map(p -> new ResponseEntity<>(
+                                new ProductResponse(
+                                        p.getId(),
+                                        new ProductData(p.getRef(), p.getName(), p.getCommonPrice())),
+                                HttpStatus.OK))
+                        .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -54,15 +52,13 @@ public class ProductsController {
         product.setCommonPrice(productData.getCommonPrice());
 
         final Product savedProduct = productRepository.save(product);
-        if(savedProduct!=null)
-            return
-                    new ProductResponse(
-                            savedProduct.getId(),
-                            new ProductData(
-                                    savedProduct.getRef(),
-                                    savedProduct.getName(),
-                                    savedProduct.getCommonPrice()));
+        return
+                new ProductResponse(
+                        savedProduct.getId(),
+                        new ProductData(
+                                savedProduct.getRef(),
+                                savedProduct.getName(),
+                                savedProduct.getCommonPrice()));
 
-        return null;
     }
 }

@@ -37,14 +37,11 @@ public class ImagesController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ImageResponse> getImage(@PathVariable(name="id")Long id) {
 
-        final Image image = imageRepository.findOne(id);
-
-        if (image != null)
-            return new ResponseEntity(
+        return imageRepository.findById(id)
+                .map(image -> new ResponseEntity<ImageResponse>(
                     new ImageResponse.OnlyImage(
                             new ImageData(image.getFileName(), image.getFileData())),
-                    HttpStatus.OK);
-
-        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+                    HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -52,7 +53,7 @@ public class CustomersControllerTest {
 
 	@Test
 	public void getPersonTest() throws Exception {
-		given(customerRepo.findOne(1l)).willReturn(customer);
+		given(customerRepo.findById(1l)).willReturn(Optional.of(customer));
 		mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
 				.andExpect(jsonPath("$.customerId", is(1)))
 				.andExpect(jsonPath("$.customer.firstName", is("Saulo")))

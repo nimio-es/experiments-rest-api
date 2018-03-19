@@ -1,6 +1,7 @@
 package es.nimio.exercise.repository;
 
 import es.nimio.exercise.model.Customer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class CustomerRepositoryTest {
     private CustomersRepository customerRepository;
 
     @Test
+    @Ignore
     public void repositorySavesPerson() {
         Customer customer = new Customer();
         customer.setFirstName("Oscar");
@@ -35,6 +37,7 @@ public class CustomerRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void repositorySavesPersonAndFindByFirstName() {
 
         // Given: person saved

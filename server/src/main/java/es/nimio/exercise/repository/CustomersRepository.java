@@ -5,15 +5,16 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface CustomersRepository extends CrudRepository<Customer, Long> {
 	
-	Collection<Customer> findAll();
+	List<Customer> findAll();
 
-	Collection<Customer> findByFirstName(String firstName);
+	List<Customer> findByFirstName(String firstName);
 
-	Collection<Customer> findByLastName(String lastName);
+	List<Customer> findByLastName(String lastName);
 
-	Collection<Customer> findByNdi(String ndi);
+	List<Customer> findByNdi(String ndi);
 }

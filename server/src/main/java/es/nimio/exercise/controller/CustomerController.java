@@ -39,23 +39,22 @@ public class CustomerController extends CustomerBaseController {
                             includePurchases ? purchasesRepository.findByCustomerId(id) : null),
                     HttpStatus.OK);
 
-        return Optional
-                .ofNullable(customerRepo.findOne(id))
+        return customerRepo.findById(id)
                 .map(c -> new ResponseEntity<>(toCustomerResponse(c, null), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> postTheCustomer(@PathVariable long id) {
-        return customerRepo.exists(id)
+        return customerRepo.existsById(id)
                 ? new ResponseEntity<>(HttpStatus.CONFLICT)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<CustomerResponse> replaceCustomer(@PathVariable long id, @RequestBody CustomerData customer) {
-        final Customer loadedCustomer = customerRepo.findOne(id);
-        if(loadedCustomer == null)
+        final Optional<Customer> optionalLoadedCustomer = customerRepo.findById(id);
+        if(!optionalLoadedCustomer.isPresent())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         if(StringUtils.isEmpty(customer.getFirstName())
@@ -63,6 +62,7 @@ public class CustomerController extends CustomerBaseController {
             || StringUtils.isEmpty(customer.getNdi()))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+        final Customer loadedCustomer = optionalLoadedCustomer.get();
         loadedCustomer.setFirstName(customer.getFirstName());
         loadedCustomer.setLastName(customer.getLastName());
         loadedCustomer.setNdi(customer.getNdi());
@@ -79,8 +79,8 @@ public class CustomerController extends CustomerBaseController {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteCustomer(@PathVariable long id) {
-        if(customerRepo.exists(id)) {
-            customerRepo.delete(id);
+        if(customerRepo.existsById(id)) {
+            customerRepo.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -100,7 +100,7 @@ public class CustomerController extends CustomerBaseController {
         Image storedImage = imageRepository.findByCustomerId(id);
         if(storedImage == null) {
             storedImage = new Image();
-            storedImage.setCustomer(customerRepo.findOne(id));
+            storedImage.setCustomer(customerRepo.findById(id).get());
         }
         storedImage.setFileName(image.getFileName());
         storedImage.setFileData(image.getFileData());

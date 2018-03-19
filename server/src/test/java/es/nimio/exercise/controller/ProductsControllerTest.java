@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -44,7 +45,7 @@ public class ProductsControllerTest {
 
 	@Test
 	public void getProductTest() throws Exception {
-		given(productsRepository.findOne(1l)).willReturn(product);
+		given(productsRepository.findById(1l)).willReturn(Optional.of(product));
 		mvc.perform(get("/products/1").accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id", is(1)))
