@@ -1,11 +1,13 @@
 package es.nimio.exercise.repository;
 
+import es.nimio.exercise.App;
 import es.nimio.exercise.model.Customer;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@SpringBootTest(classes = App.class)
 public class CustomerRepositoryTest {
 
     @Autowired

@@ -1,12 +1,13 @@
 buildscript {
 
-    ext.kotlinVersion = '1.2.21'
+    ext.kotlinVersion = '1.2.31'
     ext.springBootVersion = '2.0.0.RELEASE'
 
     repositories {
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev/" }
         jcenter()
     }
 
@@ -30,6 +31,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev/" }
     }
 }
 
@@ -39,6 +41,7 @@ subprojects {
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev/" }
         jcenter()
     }
 }
